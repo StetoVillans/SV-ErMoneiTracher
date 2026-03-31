@@ -13,3 +13,11 @@ Per questo motivo lo stack che andrò a seguire, come scritto nel README.MD è:
 
 Un parte del progetto in futuro potrebbe includere la sostituzione di una delle tecnologie, come il frontend con uno basato su react.
 
+## .GITIGNORE
+
+Prima di iniziare, controllo il .gitignore che abbia tutto quello che mi interessa (per ora) che ignori.
+
+Quando ho creato il repo l'ho creato con il modello node quindi le cartelle principali create da un backend node dovrebbe già ignorarle, come node_modules, .env etc... ma verifichiamo.
+
+R. Sì, se vai a guardare il file .ignore a questo commit si può vedere come l'inserimento del file .ignore da modello ha messo tutto quello di cui necessitiamo per ora.
+
