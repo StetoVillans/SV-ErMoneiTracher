@@ -21,3 +21,19 @@ Quando ho creato il repo l'ho creato con il modello node quindi le cartelle prin
 
 R. Sì, se vai a guardare il file .ignore a questo commit si può vedere come l'inserimento del file .ignore da modello ha messo tutto quello di cui necessitiamo per ora.
 
+## STRUTTURA CARTELLE
+
+Adesso andiamo intanto a creare la struttura delle cartelle per il nostro progetto, così da separare backend, database e frontend. 
+
+Quindi:
+mkdir backend database frontend
+
+Da qui, in database e backend non andiamo a creare nessuna cartella poichè:
+- Per il backend quando andiamo a creare il progetto node creeerà lui la struttura di cartelle
+- Per il database non ci dovrebbe interessare creare cartelle per dividere il tutto, le faremo all'eventualità.
+
+Però possiamo farle per il frontend, sicuramente ci serviranno:
+cd frontend
+mkdir html css js media 
+
+Per ora facciamo solo queste, non sono quelle perfette o che occupano tutti i casi d'uso del fronend, però ci bastano per adesso per creare un frontend base per operatività.
