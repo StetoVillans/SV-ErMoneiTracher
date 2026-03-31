@@ -13,7 +13,7 @@ Per questo motivo lo stack che andrò a seguire, come scritto nel README.MD è:
 
 Un parte del progetto in futuro potrebbe includere la sostituzione di una delle tecnologie, come il frontend con uno basato su react.
 
-## .GITIGNORE
+## 31-03-2026 .GITIGNORE
 
 Prima di iniziare, controllo il .gitignore che abbia tutto quello che mi interessa (per ora) che ignori.
 
@@ -21,7 +21,7 @@ Quando ho creato il repo l'ho creato con il modello node quindi le cartelle prin
 
 R. Sì, se vai a guardare il file .ignore a questo commit si può vedere come l'inserimento del file .ignore da modello ha messo tutto quello di cui necessitiamo per ora.
 
-## STRUTTURA CARTELLE
+## 31-03-2026 STRUTTURA CARTELLE 
 
 Adesso andiamo intanto a creare la struttura delle cartelle per il nostro progetto, così da separare backend, database e frontend. 
 
@@ -37,3 +37,19 @@ cd frontend
 mkdir html css js media 
 
 Per ora facciamo solo queste, non sono quelle perfette o che occupano tutti i casi d'uso del fronend, però ci bastano per adesso per creare un frontend base per operatività.
+
+## 31-03-2026 CHE SI FA
+
+Direi proprio che la prima cosa che mi conviene più fare è definire lo schema del db, ho già fatto uno spunto nel file ReadME.md in uno schema mermaid:
+
+``` mermaid
+flowchart TD
+    A[Utente] -->|1;N| B(Movimento)
+    A[Utente] -->|1;N| C(Conto)
+    B --> |1;1| D(Categoria)
+    C --> |1;N| B
+    E(Tag) --> |N;N| B
+    E --> |1;N| D
+```
+
+Però sicuramente intanto possiamo definire i campi, li ho segnati in uno schema che mi sono fatto su carta quindi potrei aggiungerli allo schema mermaid, devo un'attimo sgooglare come si aggiungevano i campi alle tabelle di mermaid
