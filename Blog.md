@@ -82,6 +82,20 @@ Dove si parla di questo campo CITEXT dove ignora il maiuscolo e minuscolo quando
 Dice anche che questo type fa parte di un estensione di nome citext, dovrei approfondire cosa sono le estensioni in postgres.
 
 
+### Estensioni POSTGRESQL
+
+Beh ci ho guardato e le estensioni sono proprio quello che si può immaginare, componenti aggiuntivi per postgresql che ne permettono l'ampliazione delle funzionalità.
+
+Giusto per esser completi, l'estensione citext che interessa a me in sostanza, trasforma tutte le stringhe con questo tipo in minuscolo nel momento in cui si devono confrontare con altri valori.
+
+Da tenere a mente che comunque memorizza nel db il valore AS-IS, nel senso che se io mi registro scrivendo:
+    Steph.Villans@Gmail.com
+Quando fa i confronti li farà con il valore "steph.villans@gmail.com" ma il valore registrato sul db sarà sempre "Steph.Villans@Gmail.com".
+
+
+***
+
+
 | Nome Campo 	| Tipo        	| PK 	| FK 	|
 |------------	|-------------	|----	|----	|
 | id-utente  	| serial      	| Si 	|    	|
@@ -216,17 +230,5 @@ Quindi nella tabella, la password la salviamo così:
 
 con lo stato:
 CREATE TYPE stato-utente AS ENUM ('attivo', 'disattivo');
-
-
-### Estensioni POSTGRESQL
-
-Beh ci ho guardato e le estensioni sono proprio quello che si può immaginare, componenti aggiuntivi per postgresql che ne permettono l'ampliazione delle funzionalità.
-
-Giusto per esser completi, l'estensione citext che interessa a me in sostanza, trasforma tutte le stringhe con questo tipo in minuscolo nel momento in cui si devono confrontare con altri valori.
-
-Da tenere a mente che comunque memorizza nel db il valore AS-IS, nel senso che se io mi registro scrivendo:
-    Steph.Villans@Gmail.com
-Quando fa i confronti li farà con il valore "steph.villans@gmail.com" ma il valore registrato sul db sarà sempre "Steph.Villans@Gmail.com".
-
 
 
