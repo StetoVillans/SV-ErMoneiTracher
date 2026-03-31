@@ -11,3 +11,5 @@ Per questo motivo lo stack che andrò a seguire, come scritto nel README.MD è:
 - Frontend -> Vanilla js e html
 - Database -> Postgresql
 
+Un parte del progetto in futuro potrebbe includere la sostituzione di una delle tecnologie, come il frontend con uno basato su react.
+
