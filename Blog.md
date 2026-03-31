@@ -80,6 +80,7 @@ Dice anche che questo type fa parte di un estensione di nome citext, dovrei appr
 | ruolo-utente      	| ENUM(ruolo-utente)     	|    	|    	|
 
 ENUM vuol dire che il tipo di dato lo andrò a creare io, in questo caso sarà così:
+
 CREATE TYPE ruolo-utente AS ENUM ('standard', 'pro', 'admin');
 
 
