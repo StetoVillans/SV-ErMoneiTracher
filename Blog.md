@@ -71,12 +71,17 @@ Dove si parla di questo campo CITEXT dove ignora il maiuscolo e minuscolo quando
 
 Dice anche che questo type fa parte di un estensione di nome citext, dovrei approfondire cosa sono le estensioni in postgres.
 
-| Nome Campo 	| Tipo        	| PK 	| FK 	|   	|
-|------------	|-------------	|----	|----	|---	|
-| id-utente  	| serial      	| Si 	|    	|   	|
-| Nome       	| varchar(30) 	|    	|    	|   	|
-| Cognome    	| varchar(30) 	|    	|    	|   	|
-| Email      	| citext      	|    	|    	|   	|
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-utente  	| serial      	| Si 	|    	|
+| Nome       	| varchar(30) 	|    	|    	|
+| Cognome    	| varchar(30) 	|    	|    	|
+| Email      	| citext      	|    	|    	|
+| ruolo-utente      	| ENUM(ruolo-utente)     	|    	|    	|
+
+ENUM vuol dire che il tipo di dato lo andrò a creare io, in questo caso sarà così:
+CREATE TYPE ruolo-utente AS ENUM ('standard', 'pro', 'admin');
+
 
 ### Estensioni POSTGRESQL
 
