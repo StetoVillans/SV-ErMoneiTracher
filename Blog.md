@@ -196,7 +196,8 @@ Sono hash completamente diversi, ma una raimbow table non avrà mai al suo inter
 
 La password di esempio rimane debole, ma bcrypt aggiunge in questo modo un layer di sicurezza.
 
-+++
+***
+
 
 
 Quindi nella tabella, la password la salviamo così:
