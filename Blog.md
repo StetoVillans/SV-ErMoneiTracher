@@ -63,6 +63,16 @@ Note:
 
 ## Tabella Utente
 
+Intanto scrivo i primi campi standard che mi vengono immediatamente in mente senza neanche pensarci:
+
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-utente  	| serial      	| Si 	|    	|
+| Nome       	| varchar(30) 	|    	|    	|
+| Cognome    	| varchar(30) 	|    	|    	|
+
+
 Stavo scrivendo le proprietà che mi interessano della tabella e per trovare il giusto tipo da dare al campo email ho trovato questo thread di stack overflow molto utile:
 
 https://stackoverflow.com/questions/62113787/what-should-be-the-data-type-of-field-email-in-postgresql-database-in-pgadmin
@@ -70,6 +80,21 @@ https://stackoverflow.com/questions/62113787/what-should-be-the-data-type-of-fie
 Dove si parla di questo campo CITEXT dove ignora il maiuscolo e minuscolo quando fa una comparazione di valori, e nel caso delle mail che è molto importante che non si duplichino è giusto che non permetta due ingressi di questo tipo: steph.villans@gmail.com e Steph.Villans@gmail.com
 
 Dice anche che questo type fa parte di un estensione di nome citext, dovrei approfondire cosa sono le estensioni in postgres.
+
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-utente  	| serial      	| Si 	|    	|
+| Nome       	| varchar(30) 	|    	|    	|
+| Cognome    	| varchar(30) 	|    	|    	|
+| Email      	| citext      	|    	|    	|
+
+Per il ruolo dell'utente andiamo ad usare ENUM.
+
+ENUM vuol dire che il tipo di dato lo andrò a creare io, in questo caso sarà così:
+
+CREATE TYPE ruolo-utente AS ENUM ('standard', 'pro', 'admin');
+
 
 | Nome Campo 	| Tipo        	| PK 	| FK 	|
 |------------	|-------------	|----	|----	|
@@ -79,11 +104,97 @@ Dice anche che questo type fa parte di un estensione di nome citext, dovrei appr
 | Email      	| citext      	|    	|    	|
 | ruolo-utente      	| ENUM(ruolo-utente)     	|    	|    	|
 
-ENUM vuol dire che il tipo di dato lo andrò a creare io, in questo caso sarà così:
+Poi abbiamo sicuramente:
+- data-creazione, probabilmente il data-type è il date, però ho trovato che c'è anche timestamp, quindi voglio vedere cosa è più adatto, PS. si il giusto è TIMESTAMP, e si aggiunge valore di DEFAULT NOW()
+- stato, enum attivo/disattivo
 
-CREATE TYPE ruolo-utente AS ENUM ('standard', 'pro', 'admin');
+Questione password, direi che ci facciamo un campo dedicato in cui viene salvata la password hashata con un algoritmo non reversibile.
 
+Mi sono informato adesso nel cryptare le password, ho letto un paio di articoli interessanti:
+- https://blog.codinghorror.com/youre-probably-storing-passwords-incorrectly/
+- https://web.archive.org/web/20070915191117/http://www.matasano.com/log/958/enough-with-the-rainbow-tables-what-you-need-to-know-about-secure-password-schemes/
 
+(Bellini comunque!)
+
+E quanto ho potuto apprendere è:
+- non inventarmi nulla
+- Usa quello che gente molto più intelligente di te ha già fatto
+
+Quindi usiamo bcrypt, ma come lo implemento nel mio db? GOOGLE!
+
+E qui ho trovato una domanda stack overflow che fa proprio al caso mio:
+https://stackoverflow.com/questions/2647158/how-can-i-hash-passwords-in-postgresql
+
+### Implementare bcrypt nel db, CA' DEVO FA'?
+
+Allora stavo leggendo la domanda di stack overflow ma ho notato una cosa, in quella domanda mandano la password in chiaro al db e il db la salva dopo averla criptata, però non mi fa impazzire come cosa.
+
+Perchè questo vorrebbe dire che la password deve fare 2 salti non in chiaro, da frontend a backend, e da backend a database.
+
+Quindi, visto che il mio backend vuole essere node.js guardo se è possibile cryptare con bcrypt nel backend.
+N.B. per questo tiro una bella sgippata, facendo cross reference sgooglando.
+
+In node.js esiste un pacchetto dedicato ad utilizzare bcrypt.
+npm install bcrypt
+
+Fa l'esempio di usare questi dati:```
+```js
+const bcrypt = require('bcrypt');
+
+const plainPassword = req.body.password;
+const saltRounds = 12;
+
+const passwordHash = await bcrypt.hash(plainPassword, saltRounds);
+
+// salva passwordHash nel db
+```
+Per un'ipotetico Login
+
+e per il register:
+```js
+const bcrypt = require('bcrypt');
+
+// password inserita dall'utente
+const plainPassword = req.body.password;
+
+// hash preso dal db
+const passwordHashFromDb = user.password_hash;
+
+const isValid = await bcrypt.compare(plainPassword, passwordHashFromDb);
+
+if (!isValid) {
+  return res.status(401).json({ error: 'Credenziali non valide' });
+}
+```
+
+In sostanza i metodi principali sono .hash e .compare.
+
+Quindi, nel consisto che è il salting che usa bcrypt? visto che lo si usa per l'hashing devo sapere che cazzo vor dì.
+
+Una spiegazione buona si trova in questa Question:
+https://stackoverflow.com/questions/25586073/bcrypt-what-is-meant-salt-and-cost
+
+La sostanza è: Evitare raimbow table attack.
+
+Gli attacchi rainbow table sono attacchi che salvano un tot di password hashate e poi le vanno a provare nei sistemi.
+Se noi salvassimo le password hashandole solo queste sarebbero vulnerabili a questo tipo di attacco, poichè se qualcuno ha una password come "prova123" questa sarebbe facile da hashare e provare.
+
+AD ESEMPIO: 
+password non hashata = prova123 
+password hashata = e32ae4e0d9158c00684ec73ce7803ab1
+
+Se qualcun'altro hashasse la password prova123, riuscirebbe a ricavare lo stesso hash, ed entrare.
+
+Il salting cerca di prevenire questo, una volta che viene salvata una password si aggiunge il salt, ovvero una stringa di caratteri alfanumerici casuale che permette di salvare la password in maniera molto più sicura
+
+AD ESEMPIO: 
+password non hashata = prova123 
+SALT = "d15sa1ca515d" 
+password hashata (salt + psw) = 0c435e1ba4ad9ab1994b29f7ebcb2356
+
+Sono hash completamente diversi, ma una raimbow table non avrà mai al suo interno un hash di "d15sa1ca515dprova123".
+
+La password di esempio rimane debole, ma bcrypt aggiunge in questo modo un layer di sicurezza.
 ### Estensioni POSTGRESQL
 
 Beh ci ho guardato e le estensioni sono proprio quello che si può immaginare, componenti aggiuntivi per postgresql che ne permettono l'ampliazione delle funzionalità.
