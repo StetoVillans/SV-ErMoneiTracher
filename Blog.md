@@ -82,7 +82,7 @@ Dove si parla di questo campo CITEXT dove ignora il maiuscolo e minuscolo quando
 Dice anche che questo type fa parte di un estensione di nome citext, dovrei approfondire cosa sono le estensioni in postgres.
 
 <details>
-<summary><strong> Estensioni POSTGRESQL <strong></summary>
+<summary><strong> Estensioni POSTGRESQL </strong></summary>
 
 ### Estensioni POSTGRESQL
 
@@ -95,6 +95,7 @@ Da tenere a mente che comunque memorizza nel db il valore AS-IS, nel senso che s
 Quando fa i confronti li farà con il valore "steph.villans@gmail.com" ma il valore registrato sul db sarà sempre "Steph.Villans@Gmail.com".
 
 </details>
+
 ***
 
 
