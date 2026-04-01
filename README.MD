@@ -29,37 +29,48 @@ Suca sarà da vedere meglio dopo
 ``` mermaid
 erDiagram
     UTENTE {
-        int id
-        string nome
+        serial id-utente
+        varchar(30) nome
+        varchar(30) cognome
+        citext email
+        ENUM(standard/pro/admin) ruolo
+        timestamp data-creazione
+        ENUM(attivo/disattivo) stato
+        varchar(255) psw-hash
     }
 
     CONTO {
-        int id
-        int utente_id
+        serial id
+        serial utente_id
         string nome
+        da finire
     }
 
     MOVIMENTO {
-        int id
-        int utente_id
-        int conto_id
-        int categoria_id
+        serial id-movimento
+        serial utente_id
+        serial conto_id
+        serial categoria_id
         decimal importo
+        text descrizione
+        ENUM(ingresso/uscita) tipo
     }
 
     CATEGORIA {
-        int id
+        serial id
         string nome
+        da finire
     }
 
     TAG {
-        int id
+        serial id
         string nome
+        serial id-categoria
     }
 
-    MOVIMENTO_TAG {
-        int movimento_id
-        int tag_id
+    MOVIMENTO-TAG {
+        serial movimento_id
+        serial tag_id
     }
 
     UTENTE ||--o{ CONTO : possiede
