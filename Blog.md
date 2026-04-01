@@ -349,7 +349,6 @@ Comunque per altre info:
 https://docs.mermaidviewer.com/diagrams/er.html
 
 Per lo schema del mio db:
-
 ``` mermaid
 erDiagram
     UTENTE {
@@ -357,9 +356,9 @@ erDiagram
         varchar(30) nome
         varchar(30) cognome
         citext email
-        ENUM(standard/pro/admin) ruolo
+        ENUM(ruolo) ruolo
         timestamp data-creazione
-        ENUM(attivo/disattivo) stato
+        ENUM(stato) stato
         varchar(255) psw-hash
     }
 
@@ -377,7 +376,7 @@ erDiagram
         serial categoria_id
         decimal importo
         text descrizione
-        ENUM(ingresso/uscita) tipo
+        ENUM(tipo) tipo
     }
 
     CATEGORIA {
@@ -401,6 +400,11 @@ erDiagram
     UTENTE ||--o{ MOVIMENTO : registra
     CONTO ||--o{ MOVIMENTO : contiene
     CATEGORIA ||--o{ MOVIMENTO : classifica
-    MOVIMENTO ||--o{ MOVIMENTO_TAG : ha
-    TAG ||--o{ MOVIMENTO_TAG : collega
+    MOVIMENTO ||--o{ MOVIMENTO-TAG : ha
+    TAG ||--o{ MOVIMENTO-TAG : collega
 ```
+
+Ok quindi, aggiustato questo, possiamo continuare a modellare il db, mancano queste tabelle:
+- conto
+- categoria
+
