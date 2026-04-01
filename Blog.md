@@ -84,7 +84,7 @@ Dice anche che questo type fa parte di un estensione di nome citext, dovrei appr
 <details>
 <summary><strong> Estensioni POSTGRESQL </strong></summary>
 
-### Estensioni POSTGRESQL
+Estensioni POSTGRESQL
 
 Beh ci ho guardato e le estensioni sono proprio quello che si può immaginare, componenti aggiuntivi per postgresql che ne permettono l'ampliazione delle funzionalità.
 
@@ -234,11 +234,13 @@ Quindi nella tabella, la password la salviamo così:
 con lo stato:
 CREATE TYPE stato-utente AS ENUM ('attivo', 'disattivo');
 
-## 01-04-2026 Continuiamo il DB SCHEMA
+# 01-04-2026
+
+## Continuiamo il DB SCHEMA
 
 Ieri abbiamo direi finito la tabella per gli utenti, per ora di quella mi sento relativamente contento per quella, quindi intanto continuiamo con le altre, tanto sicuramente andrà completata viste le relazioni con le altre tabelle.
 
-### TABELLA MOVIMENTO
+## TABELLA MOVIMENTO
 
 L'obbiettivo di questa tabella è quello di salvare ogni singolo movimento monetario che viene eseguito, quindi:
 - Uscita
@@ -264,7 +266,7 @@ Ok, avevo un ricordo da scuola e immaginavo fosse così ma volevo esserne sicuro
 
 Essendo che nel nostro schema, un movimento può avere più tag e un tag può avere più movimenti, quindi la relazione tra le due tabelle è N:N (Molti a Molti), si può creare una tabella ponte con solo i campi che ci interessano.
 
-### TABELLA MOVIMENTO-TAG
+## TABELLA MOVIMENTO-TAG
 
 | Nome Campo 	| Tipo        	| PK 	| FK 	|
 |------------	|-------------	|----	|----	|
@@ -273,7 +275,7 @@ Essendo che nel nostro schema, un movimento può avere più tag e un tag può av
 
 Nella quale la PK è creata dalla combinazione dei due ID, quindi PK è (id-movimento, id-tag).
 
-### TABELLA MOVIMENTO
+## TABELLA MOVIMENTO
 
 Quindi i dati che ci interessa avere poi nella tabella di Movimenti è questo (senza id-tag)
 
@@ -299,7 +301,7 @@ PS. Aggiungo anche l'id dell'utente che fa il movimento, perchè è vero che il 
 | id-utente       	| serial 	|    	|    SI	|
 
 
-## 01-04-2026 CORREGGIAMO mermeid
+## CORREGGIAMO mermeid
 
 Visto il cambiamento affrontato nel db schema, aggiorniamo lo schema mermeid:
 
@@ -315,7 +317,7 @@ flowchart TD
     E --> |1;N| D
 ```
 
-## 01-04-2026 TABELLA TAG
+## TABELLA TAG
 
 Per quanto riguarda la tabella tag, dobbiamo salvare relativamente poco:
 
@@ -470,3 +472,5 @@ Quindi direi la tabella definitiva (per ora) è:
 | id-movimento       	| serial 	|    	|    SI	|
 | nome       	| varchar(255) 	|    	|   	|
 | tipo       	| ENUM(ingresso,uscita) 	|    	|   	|
+
+Aggiornato anche in readME.md
