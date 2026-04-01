@@ -33,9 +33,9 @@ erDiagram
         varchar(30) nome
         varchar(30) cognome
         citext email
-        ENUM(standard,pro,admin) ruolo
+        ENUM(ruolo) ruolo
         timestamp data-creazione
-        ENUM(attivo,disattivo) stato
+        ENUM(stato) stato
         varchar(255) psw-hash
     }
 
@@ -53,7 +53,7 @@ erDiagram
         serial categoria_id
         decimal importo
         text descrizione
-        ENUM(ingresso,uscita) tipo
+        ENUM(tipo) tipo
     }
 
     CATEGORIA {
