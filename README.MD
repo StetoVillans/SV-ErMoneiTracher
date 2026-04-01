@@ -43,7 +43,7 @@ erDiagram
         serial id
         serial id-utente
         varchar(255) nome
-        ENUM(carte,banca,contanti) tipo
+        ENUM(tipo) tipo
         decimal saldo-attuale
     }
 
