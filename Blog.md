@@ -307,5 +307,7 @@ Per quanto riguarda la tabella tag, dobbiamo salvare relativamente poco:
 | Nome Campo 	| Tipo        	| PK 	| FK 	|
 |------------	|-------------	|----	|----	|
 | id-tag  	| serial      	| SI 	|    	|
+| nome | varchar(255) | | |
+
 
 continuare...

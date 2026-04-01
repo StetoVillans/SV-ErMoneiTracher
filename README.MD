@@ -25,12 +25,14 @@ Suca sarà da vedere meglio dopo
 
 ## Database
 
+
 ``` mermaid
 flowchart TD
     A[Utente] -->|1;N| B(Movimento)
     A[Utente] -->|1;N| C(Conto)
     B --> |1;1| D(Categoria)
     C --> |1;N| B
-    E(Tag) --> |N;N| B
+    B --> |1;N| F(Movimento-Tag)
+    E(Tag) --> |1;N| F
     E --> |1;N| D
 ```
