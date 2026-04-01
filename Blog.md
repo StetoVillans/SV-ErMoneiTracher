@@ -329,6 +329,9 @@ Relationship Types
     Many-to-One: }o--||
     Many-to-Many: }o--o{
 
+Comunque per altre info:
+https://docs.mermaidviewer.com/diagrams/er.html
+
 Per lo schema del mio db:
 
 ``` mermaid
