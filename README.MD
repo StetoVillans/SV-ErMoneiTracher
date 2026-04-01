@@ -27,12 +27,45 @@ Suca sarà da vedere meglio dopo
 
 
 ``` mermaid
-flowchart TD
-    A[Utente] -->|1;N| B(Movimento)
-    A[Utente] -->|1;N| C(Conto)
-    E(Tag) --> |1;N| F
-    B --> |1;1| D(Categoria)
-    B --> |1;N| F(Movimento-Tag)
-    C --> |1;N| B
-    E --> |1;N| D
+erDiagram
+    UTENTE {
+        int id
+        string nome
+    }
+
+    CONTO {
+        int id
+        int utente_id
+        string nome
+    }
+
+    MOVIMENTO {
+        int id
+        int utente_id
+        int conto_id
+        int categoria_id
+        decimal importo
+    }
+
+    CATEGORIA {
+        int id
+        string nome
+    }
+
+    TAG {
+        int id
+        string nome
+    }
+
+    MOVIMENTO_TAG {
+        int movimento_id
+        int tag_id
+    }
+
+    UTENTE ||--o{ CONTO : possiede
+    UTENTE ||--o{ MOVIMENTO : registra
+    CONTO ||--o{ MOVIMENTO : contiene
+    CATEGORIA ||--o{ MOVIMENTO : classifica
+    MOVIMENTO ||--o{ MOVIMENTO_TAG : ha
+    TAG ||--o{ MOVIMENTO_TAG : collega
 ```
