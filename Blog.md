@@ -408,3 +408,32 @@ Ok quindi, aggiustato questo, possiamo continuare a modellare il db, mancano que
 - conto
 - categoria
 
+## TABELLA CONTO
+
+Allora la tabella con le prime cose che mi vengono in mente è così:
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-conto  	| serial      	| SI 	|    	|
+| id-user       	| serial 	|    	|    SI	|
+| nome       	| varchar(255) 	|    	|   	|
+| saldo-iniziale   	| decimal (2 posizioni di precisione) |  |  |
+| saldo-attuale       	| decimal (2 posizioni di precisione) |  |  |
+
+Per ora mi vengono in mente queste suddivisioni, forse un'altro campo che potrebbe essere utile è:
+- tipo di conto, e mettere un enum con tipo banca, contanti, carta di debito, carta di credito, non mi serve particolarmente però potrebbe essere utile, nel senso che potrei magari voler filtrare quante spese ho fatto tra diverse carte di credito e sommarle
+
+Ora che ci penso probabilmente la distinzione tra saldo-iniziale e saldo-attuale non serve, tanto il saldo iniziale si mette solo quando si crea il conto, dopo non si modifica più, quindi se invece che metterlo come campo lo faccio inserire in fase di creazione conto e poi lo metto direttamente in saldo attuale direi che cambia poco.
+
+Quindi direi che per ora la tabella conto è la seguente:
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-conto  	| serial      	| SI 	|    	|
+| id-user       	| serial 	|    	|    SI	|
+| nome       	| varchar(255) 	|    	|   	|
+| tipo   	| ENUM(carte,banca,contanti) |  |  |
+| saldo-attuale       	| decimal (2 posizioni di precisione) |  |  |
+
+Vado a modificare lo schema db nel readme...
+

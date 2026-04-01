@@ -41,16 +41,17 @@ erDiagram
 
     CONTO {
         serial id
-        serial utente_id
-        string nome
-        da finire
+        serial id-utente
+        varchar(255) nome
+        ENUM(carte,banca,contanti) tipo
+        decimal saldo-attuale
     }
 
     MOVIMENTO {
         serial id-movimento
-        serial utente_id
-        serial conto_id
-        serial categoria_id
+        serial id-utente
+        serial id-conto
+        serial id-categoria
         decimal importo
         text descrizione
         ENUM(tipo) tipo
