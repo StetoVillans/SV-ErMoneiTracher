@@ -234,4 +234,68 @@ Quindi nella tabella, la password la salviamo così:
 con lo stato:
 CREATE TYPE stato-utente AS ENUM ('attivo', 'disattivo');
 
+## 01-04-2026 Continuiamo il DB SCHEMA
 
+Ieri abbiamo direi finito la tabella per gli utenti, per ora di quella mi sento relativamente contento per quella, quindi intanto continuiamo con le altre, tanto sicuramente andrà completata viste le relazioni con le altre tabelle.
+
+### TABELLA MOVIMENTO
+
+L'obbiettivo di questa tabella è quello di salvare ogni singolo movimento monetario che viene eseguito, quindi:
+- Uscita
+- Ingressi
+- Trasferimenti
+
+Direi che questi sono i 3 casi principali, che in realtà tratterei come 2 tipi, nel senso che un trasferimento è solo un uscita da un conto ed un ingresso su un'altro.
+
+Un movimento quindi ha sicuramente:
+- id-movimento, PK per gestire il fatto che siano univochi
+- id-contoid-conto, FK, indica su che conto è stato effettuato un movimento
+- importo, a quanto ammonta il movimento
+- descrizione, una descrizione sul movimento
+- id-categoria, FK indica a quale categoria appartiene il movimento
+- tipo-movimento, ENUM ingresso/uscita per determinare che tipo di movimento è stato fatto.
+- id-tag, FK
+
+Il problema qui è l'id-tag, poichè per la mia interpretazione ogni movimento può avere più tag assegnati, ma come salvo per ogni record in movimenti pià id-tag?
+
+Qui si sgoogla.
+
+Ok, avevo un ricordo da scuola e immaginavo fosse così ma volevo esserne sicuro.
+
+Essendo che nel nostro schema, un movimento può avere più tag e un tag può avere più movimenti, quindi la relazione tra le due tabelle è N:N (Molti a Molti), si può creare una tabella ponte con solo i campi che ci interessano.
+
+### TABELLA MOVIMENTO-TAG
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-movimento  	| serial      	| 	|  SI  	|
+| id-tag       	| serial 	|    	|   SI 	|
+
+Nella quale la PK è creata dalla combinazione dei due ID, quindi PK è (id-movimento, id-tag).
+
+Quindi i dati che ci interessa avere poi nella tabella di Movimenti è questo (senza id-tag)
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-movimento  	| serial      	| SI 	|    	|
+| id-conto       	| serial 	|    	|    SI	|
+| importo       	| decimal (2 posizioni di precisione) 	|    	|   	|
+| descrizione       	| text 	|    	|    	|
+| id-categoria       	| serial 	|    	|    SI	|
+| tipo-movimento       	| ENUM(ingresso/uscita) 	|    	|    SI	|
+
+## 01-04-2026 CORREGGIAMO MARMEID
+
+Visto il cambiamento affrontato nel db schema, aggiorniamo lo schema marmeid:
+
+
+``` mermaid
+flowchart TD
+    A[Utente] -->|1;N| B(Movimento)
+    A[Utente] -->|1;N| C(Conto)
+    B --> |1;1| D(Categoria)
+    C --> |1;N| B
+    F(Movimento-Tag) --> |1;N| B
+    E(Tag) --> |1;N| F
+    E --> |1;N| D
+```
