@@ -82,7 +82,8 @@ Dove si parla di questo campo CITEXT dove ignora il maiuscolo e minuscolo quando
 Dice anche che questo type fa parte di un estensione di nome citext, dovrei approfondire cosa sono le estensioni in postgres.
 
 <details>
-<summary> Estensioni POSTGRESQL </summary>
+<summary><strong> Estensioni POSTGRESQL <strong></summary>
+
 ### Estensioni POSTGRESQL
 
 Beh ci ho guardato e le estensioni sono proprio quello che si può immaginare, componenti aggiuntivi per postgresql che ne permettono l'ampliazione delle funzionalità.
