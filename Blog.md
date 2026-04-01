@@ -309,5 +309,68 @@ Per quanto riguarda la tabella tag, dobbiamo salvare relativamente poco:
 | id-tag  	| serial      	| SI 	|    	|
 | nome | varchar(255) | | |
 
+STOP!
 
-continuare...
+Ho messo in pausa la scrittura della tabella perchè ho sbagliato tutto finora, ho usato per mermail il diagramma di flusso, dovevo usare il componente mermaid erDiagram, che mi permette di gestire le relazioni tra tabelle, mettendo anche gli attributi.
+
+La documentazione basa di questa cosa è la seguente:
+
+Basic Elements
+
+    Entities: entity EntityName
+    Attributes: Listed within entities
+    Relationships: Various types of connections between entities
+    Cardinality: |o--o|, }o--o{, etc.
+
+Relationship Types
+
+    One-to-One: ||--||
+    One-to-Many: ||--o{
+    Many-to-One: }o--||
+    Many-to-Many: }o--o{
+
+Per lo schema del mio db:
+
+``` mermaid
+erDiagram
+    UTENTE {
+        int id
+        string nome
+    }
+
+    CONTO {
+        int id
+        int utente_id
+        string nome
+    }
+
+    MOVIMENTO {
+        int id
+        int utente_id
+        int conto_id
+        int categoria_id
+        decimal importo
+    }
+
+    CATEGORIA {
+        int id
+        string nome
+    }
+
+    TAG {
+        int id
+        string nome
+    }
+
+    MOVIMENTO_TAG {
+        int movimento_id
+        int tag_id
+    }
+
+    UTENTE ||--o{ CONTO : possiede
+    UTENTE ||--o{ MOVIMENTO : registra
+    CONTO ||--o{ MOVIMENTO : contiene
+    CATEGORIA ||--o{ MOVIMENTO : classifica
+    MOVIMENTO ||--o{ MOVIMENTO_TAG : ha
+    TAG ||--o{ MOVIMENTO_TAG : collega
+```
