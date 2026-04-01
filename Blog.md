@@ -437,3 +437,36 @@ Quindi direi che per ora la tabella conto è la seguente:
 
 Vado a modificare lo schema db nel readme...
 
+Fatto.
+
+## TABELLA CATEGORIA
+
+Allora come prima, la butto giù su due piedi, poi la ragiono meglio:
+
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-categoria  	| serial      	| SI 	|    	|
+| id-movimento       	| serial 	|    	|    SI	|
+| nome       	| varchar(255) 	|    	|   	|
+
+Al momento mi vengono solo queste cose sinceramente, perchè l'obbiettivo delle categorie è semplicemente dividere le spese, per evitare di fare un grosso enum invece di usare una tabella.
+
+Perchè l'alternativa era quella di creare un grosso enum per tutte le categorie possibili nella tabella movimento, ma se voglio aggiungere una categoria mi sembra poco lineare come ragionamento.
+
+Una cosa che potrebbe aver senso potrebbe essere dare una proprietà alle categorie che rende le spese in quella categorie non contante nelle statistiche (?) non so se potrebbe aver senso.
+
+A pensarci nel privato non mi viene in mente una situazione nella quale vorrei che una spesa che faccio non mi venga segnata, anche perchè rimuoverebbe la logica di segnare le spese in sè per sè, c'è creerebbe delle discrepanze nelle spese e quanto segnato e renderebbe la cosa controintuitiva.
+
+Ah cazzo non ci avevo pensato, il tipo di movimento, ovvero la categoria, è una categoria che si applica solo alle entrate o solo alle spese? o tutte e due.
+
+Ad esempio stipendio, è sicuramente un'entrata, quindi si può fare la separazione tra queste categorie, così che quando si fa per aggiungere una categoria al movimento, appaiano solo le categorie relative ad uscite o entrate.
+
+Quindi direi la tabella definitiva (per ora) è:
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-categoria  	| serial      	| SI 	|    	|
+| id-movimento       	| serial 	|    	|    SI	|
+| nome       	| varchar(255) 	|    	|   	|
+| tipo       	| ENUM(ingresso,uscita) 	|    	|   	|

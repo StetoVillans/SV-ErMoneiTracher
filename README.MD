@@ -59,8 +59,9 @@ erDiagram
 
     CATEGORIA {
         serial id
-        string nome
-        da finire
+        serial id-movimento
+        varchar(255) nome
+        enum(tipo) tipo
     }
 
     TAG {
