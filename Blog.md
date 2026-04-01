@@ -284,9 +284,9 @@ Quindi i dati che ci interessa avere poi nella tabella di Movimenti è questo (s
 | id-categoria       	| serial 	|    	|    SI	|
 | tipo-movimento       	| ENUM(ingresso/uscita) 	|    	|    SI	|
 
-## 01-04-2026 CORREGGIAMO MARMEID
+## 01-04-2026 CORREGGIAMO mermeid
 
-Visto il cambiamento affrontato nel db schema, aggiorniamo lo schema marmeid:
+Visto il cambiamento affrontato nel db schema, aggiorniamo lo schema mermeid:
 
 
 ``` mermaid
