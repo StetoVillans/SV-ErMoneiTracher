@@ -77,6 +77,6 @@ erDiagram
     UTENTE ||--o{ MOVIMENTO : registra
     CONTO ||--o{ MOVIMENTO : contiene
     CATEGORIA ||--o{ MOVIMENTO : classifica
-    MOVIMENTO ||--o{ MOVIMENTO_TAG : ha
-    TAG ||--o{ MOVIMENTO_TAG : collega
+    MOVIMENTO ||--o{ MOVIMENTO-TAG : ha
+    TAG ||--o{ MOVIMENTO-TAG : collega
 ```
