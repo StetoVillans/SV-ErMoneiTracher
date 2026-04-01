@@ -299,3 +299,13 @@ flowchart TD
     E(Tag) --> |1;N| F
     E --> |1;N| D
 ```
+
+## 01-04-2026 TABELLA TAG
+
+Per quanto riguarda la tabella tag, dobbiamo salvare relativamente poco:
+
+| Nome Campo 	| Tipo        	| PK 	| FK 	|
+|------------	|-------------	|----	|----	|
+| id-tag  	| serial      	| SI 	|    	|
+
+continuare...
