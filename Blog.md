@@ -474,3 +474,137 @@ Quindi direi la tabella definitiva (per ora) è:
 | tipo       	| ENUM(ingresso,uscita) 	|    	|   	|
 
 Aggiornato anche in readME.md
+
+# 02-04-2026
+
+Allora il db schema lo abbiamo fatto, penso che a livello di ordine di cose da fare nel progetto mi convenga fare prima tutto il db, poi buona parte del backend, poi il frontend.
+
+Questo perchè avendo un db completamente funzionante abbiamo tutti i dati per un'applicazione, una volta che ho il db completo vuol dire che posso fare il backend per usare i dati nel db, e una volta fatto questo il frontend per creare l'app effettiva.
+
+Però sì direi che continuiamo con il db.
+
+## DB IN DOCKER
+
+Quindi, in generale nel progetto, lo scopo è quello di containerizzare tutto, quindi intanto cerchiamo l'immagine docker per postgresql.
+
+Basta andare su docker hub e la troviamo facilmente:
+https://hub.docker.com/_/postgres
+
+Visto che noi dobbiamo usare un db normalissimo senza troppe pretese non ci dovrebbe servire creare un dockerfile dedicato, non abbiam bisogno di immagini particolari.
+
+Dalla pagina possiamo vedere un esempio di docker compose e di tutte le variabili d'ambiente di cui può avere bisogno.
+
+Noi non abbiamo troppe pretese, abbiamo bisogno di un db funzionante, che non deve venir esposto direttamente su internet, che mantega i dati in maniera persistente (quindi sicuramente faremo dei volumi) e possibilmente una soluzione per backuppare i dati.
+
+Allora, postgres si potrebbe in realtà eseguire anche solo con:
+
+```bash
+docker pull postgres
+
+docker run --name devdb -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
+```
+
+Con il primo comando eseguirà il pull e con il seconddo eseguiamo il container di base, ovviamente questo sarà un semplice db in esecuzione, quindi senza schermata di amministrazione nè nulla.
+
+Se installassimo un db manager come pgAdmin potremmo connetterci al db in localhost 5432 e potremmo lavorare sul database.
+
+## DOCKER COMPOSE
+
+Andiamo quindi a scegliere un docker compose per il nostro db, ho trovato questo:
+
+```yml
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
+```
+
+Da questo sicuramente togliamo il tag version visto che è deprecato, poi vado su docker hub a vedere qual'è l'ultima stable di postgres e usiamo quella:
+
+```yml
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
+    driver: local
+```
+
+Per quanto riguarda la politica di restart ci va bene che si riaccenda ogni volta, per le variabili d'ambiente la facciamo pescare da file .env, se non ti ricordi come i docker compose leggono le variabili d'ambiente:
+
+https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables/
+
+Articolo di documentazione che spiega bene come usarle, nel nostro caso le dichiariamo semplicemente con: 
+
+`${variabile}`
+
+Tanto il docker compose cercherà il file .env nella directory del progetto.
+
+Visto che nel nostro caso abbiamo un solo .env e un solo docker compose, infatti per ora abbiamo solo il db, ma dopo metteremo insieme anche backend e frontend nel docker compose.
+
+Quindi il nostro docker compose attuale è il seguente:
+
+```yml
+services:
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+volumes:
+  db:
+    driver: local
+```
+
+Controlliamo ora sulla documentazione se ci sono altre variabili d'ambiente di cui abbiamo bisogno:
+
+- POSTGRES_DB, nome del db di default
+
+Dalla documentazione mi sembra di trovare solo questa che mi può servire per ora, quindi ormai che ci sono parliamo anche delle porte del db.
+
+Docker compose definisce 2 porte, quella aperta verso l'host e quella usata internamente.
+
+Nel nostro caso, internamente ci va bene che usi la 5432 non ci interessa, sull'host non la esponiamo per 2 motivi:
+- Non ci interessa esporla sull'host, aggiunge un punto di accesso non voluto
+- Docker compose definisce 2 porte, quella aperta verso l'host e quella usata internamente.
+
+Nel nostro caso, internamente ci va bene che usi la 5432 non ci interessa, sull'host non la esponiamo per 2 motivi:
+- Non ci interessa esporla sull'host, aggiunge un punto di accesso non voluto
+- I container Docker comunicano tra loro tramite la rete interna, quindi il database sarà comunque raggiungibile dagli altri servizi (es. backend) usando il nome del servizio come hostname (es. db:5432)
+
+È importante notare che più container possono usare la stessa porta interna senza alcun problema, poiché sono isolati a livello di rete.
+
+I conflitti si verificano solo quando si tenta di esporre la stessa porta sull’host.
+
+
+
+
+
+
+
+
