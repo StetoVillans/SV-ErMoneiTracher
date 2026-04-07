@@ -621,54 +621,54 @@ Guardando l'esempio che ho trovato nel sito comunque è come il mio praticamente
     <td> MIO </td> <td> ONLINE </td>
   </tr>
   <tr>
-    <td>
+  <td>
 
-      ```yaml
-      services:
-        db:
-          image: postgres:18
-          restart: always
-          environment:
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-          ports:
-            - '5432:5432'
-          volumes: 
-            - db:/var/lib/postgresql/data
+    ```yaml
+    services:
+      db:
+        image: postgres:18
+        restart: always
+        environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+        ports:
+          - '5432:5432'
+        volumes: 
+          - db:/var/lib/postgresql/data
 
-      volumes:
-        db:
-          driver: local
-      ```
+    volumes:
+      db:
+        driver: local
+    ```
 
-    </td>
-    <td> 
+  </td>
+  <td> 
     
-      ```yaml
-      services:
-        postgres:
-          container_name: postgres
-          image: postgres:latest
-          environment:
-            - POSTGRES_USER=${POSTGRES_USER}
-            - POSTGRES_PASSWORD=${POSTGRES_PW}
-            - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
-          ports:
-            - "5432:5432"
-          restart: always
+    ```yaml
+    services:
+      postgres:
+        container_name: postgres
+        image: postgres:latest
+        environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PW}
+          - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
+        ports:
+          - "5432:5432"
+        restart: always
 
-        pgadmin:
-          container_name: pgadmin
-          image: dpage/pgadmin4:latest
-          environment:
-            - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
-            - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
-          ports:
-            - "5050:80"
-          restart: always
-      ```
+      pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4:latest
+        environment:
+          - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+          - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+        ports:
+          - "5050:80"
+        restart: always
+    ```
 
-    </td>
+  </td>
   </tr>
 </table>
 
