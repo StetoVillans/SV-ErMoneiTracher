@@ -642,32 +642,30 @@ Guardando l'esempio che ho trovato nel sito comunque è come il mio praticamente
       ```
 
     </td>
-  </tr>
-  <tr>
     <td> 
     
-    ```yaml
-    services:
-      postgres:
-        container_name: postgres
-        image: postgres:latest
-        environment:
-          - POSTGRES_USER=${POSTGRES_USER}
-          - POSTGRES_PASSWORD=${POSTGRES_PW}
-          - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
-        ports:
-          - "5432:5432"
-        restart: always
+      ```yaml
+      services:
+        postgres:
+          container_name: postgres
+          image: postgres:latest
+          environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PW}
+            - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
+          ports:
+            - "5432:5432"
+          restart: always
 
-      pgadmin:
-        container_name: pgadmin
-        image: dpage/pgadmin4:latest
-        environment:
-          - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
-          - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
-        ports:
-          - "5050:80"
-        restart: always
+        pgadmin:
+          container_name: pgadmin
+          image: dpage/pgadmin4:latest
+          environment:
+            - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+            - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+          ports:
+            - "5050:80"
+          restart: always
       ```
 
     </td>
