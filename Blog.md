@@ -602,6 +602,78 @@ Nel nostro caso, internamente ci va bene che usi la 5432 non ci interessa, sull'
 I conflitti si verificano solo quando si tenta di esporre la stessa porta sull’host.
 
 
+# 07-04-2026
+
+Allora cosa voglio fare oggi, l'ultima volta siamo rimasti all'inizio della creazione del docker compose per il database, quindi direi di continuare da lì e vedere di finirlo.
+
+Facendo una bella sgooglata ho trovato un esempio di docker compose con postgres e pgadmin, che ci permette di gestire il db da interfaccia, PERO'.
+
+Mi è venuto in mente mentre scrivevo, se io implementassi pgadmin sarebbe comodo perchè tramite interfaccia web potrei gestire il db, ma c'è un grosso però, se io lo inplemento dovrei esporre la porta di pgadmin per gestirlo effettviamente da interfaccia web, e non è una cosa che mi attizza particolarmente, meno cose sono aperte, meno cose vengono bucate.
+
+E visto che i database si possono gestire tranquillamente da riga di comando tramite psql, quindi collegandomi alla console del vps e lanciando psql non ha senso aprirlo ulteriormente.
+
+Quindi zero pgadmin, sono postgres.
+
+Guardando l'esempio che ho trovato nel sito comunque è come il mio praticamente che ho già.
+
+<table>
+  <tr>
+    <td> MIO </td> <td> ONLINE </td>
+  </tr>
+  <tr>
+    <td>
+
+      ```yaml
+      services:
+        db:
+          image: postgres:18
+          restart: always
+          environment:
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+          ports:
+            - '5432:5432'
+          volumes: 
+            - db:/var/lib/postgresql/data
+
+      volumes:
+        db:
+          driver: local
+      ```
+
+    </td>
+  </tr>
+  <tr>
+    <td> 
+    
+    ```yaml
+    services:
+      postgres:
+        container_name: postgres
+        image: postgres:latest
+        environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PW}
+          - POSTGRES_DB=${POSTGRES_DB} #optional (specify default database instead of $POSTGRES_DB)
+        ports:
+          - "5432:5432"
+        restart: always
+
+      pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4:latest
+        environment:
+          - PGADMIN_DEFAULT_EMAIL=${PGADMIN_MAIL}
+          - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PW}
+        ports:
+          - "5050:80"
+        restart: always
+      ```
+
+    </td>
+  </tr>
+</table>
+
 
 
 
