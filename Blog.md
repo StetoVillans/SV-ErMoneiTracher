@@ -622,25 +622,27 @@ Guardando l'esempio che ho trovato nel sito comunque è come il mio praticamente
   </tr>
   <tr>
   <td>
+  <p>
 
-    ```yaml
-    services:
-      db:
-        image: postgres:18
-        restart: always
-        environment:
-          - POSTGRES_USER=${POSTGRES_USER}
-          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-        ports:
-          - '5432:5432'
-        volumes: 
-          - db:/var/lib/postgresql/data
+```yaml
+services:
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
 
-    volumes:
-      db:
-        driver: local
-    ```
+volumes:
+  db:
+    driver: local
+```
 
+  </p>
   </td>
   <td> 
     
