@@ -233,6 +233,8 @@ Quindi nella tabella, la password la salviamo così:
 
 con lo stato:
 CREATE TYPE stato-utente AS ENUM ('attivo', 'disattivo');
+CREATE TYPE stato-utente AS ENUM ('attivo', 'disattivo');
+CREATE TYPE stato-utente AS ENUM ('attivo', 'disattivo');
 
 # 01-04-2026
 
@@ -782,4 +784,174 @@ Direi, da riverificare ma ora devo chiudere.
 
 RICORDATI DI GUARDARE L'ORDINE DELLE TABELLE PER VEDERE SE HA SENSO...
 
+Eccoci di nuovo...
 
+Allora Utente e Categoria non hanno external quindi sono prime sicuro.
+
+Conto ha solo utente come external quindi terza.
+
+Tag ha solo categoria come external quindi quarta.
+
+Movimento ha tutte le altre come external quindi quinta.
+
+Movimento-tag ultima perchè ha come external sia movimento che tag.
+
+Quindi ci siamo, anche l'ordine delle tabelle c'è. Ora scriviamole.
+
+*Devo riguardare la sintassi per la creazione delle tabelle perchè non me la ricordo.   
+
+Docs: https://www.postgresql.org/docs/current/sql-createtable.html
+
+
+```sql
+-- CREAZIONE DEL DB (SE NON ESISTE GIA')
+CREATE DATABASE IF NOT EXISTS sv-monei-tracker;
+USE sv-monei-tracker;
+
+--CREAZIONE DELLE TABELLE 
+CREATE TABLE utente IF NOT EXISTS (
+  id-utente SERIAL,
+  nome VARCHAR(30),
+  cognome VARCHAR(30),
+  email CITEXT,
+
+)
+```
+
+Ecco a prosposito di creare le tabelle, avevo guardato il discorso di CITEXT e delle ENUM, quindi prima della tabella creerò le enum che mi servono per la tabella, le vado a pescare da su.
+
+```sql
+-- CREAZIONE DEL DB (SE NON ESISTE GIA')
+CREATE DATABASE IF NOT EXISTS sv-monei-tracker;
+USE sv-monei-tracker;
+
+-- CREAZIONE ENUM PRIMA DELLA TABELLA
+CREATE TYPE stato AS ENUM ('attivo', 'disattivo');
+CREATE TYPE ruolo AS ENUM ('standard', 'pro', 'admin');
+
+--CREAZIONE DELLE TABELLE 
+CREATE TABLE utente IF NOT EXISTS (
+  id-utente SERIAL,
+  nome VARCHAR(30),
+  cognome VARCHAR(30),
+  email CITEXT,
+
+)
+
+```
+
+E con l'enum ci siamo, per il citext avevamo parlato di dover inserire l'estensione per citext, vado a vedere su se avevo scritto come fare.
+
+No ok non avevo scritto nulla, lo scrivo ora.
+Ah beh basta fare
+
+```sql
+CREATE EXTENSION citext;
+```
+
+Quindi continuiamo sto init.sql
+
+```sql
+-- CREAZIONE DEL DB (SE NON ESISTE GIA')
+CREATE DATABASE IF NOT EXISTS db_sv_monei_tracker;
+USE db_sv_monei_tracker;
+
+-- CREAZIONE ENUM PRIMA DELLA TABELLA
+CREATE TYPE STATO_UTENTE AS ENUM ('attivo', 'disattivo');
+CREATE TYPE RUOLO_UTENTE AS ENUM ('standard', 'pro', 'admin');
+
+-- CREIAMO L'ESTENSIONE CITEXT PER LE MAIL
+CREATE EXTENSION citext;
+
+--CREAZIONE DELLE TABELLE 
+CREATE TABLE tbl_utente IF NOT EXISTS (
+  id_utente SERIAL,
+  nome VARCHAR(30),
+  cognome VARCHAR(30),
+  email CITEXT,
+  ruolo RUOLO_UTENTE,
+  data_creazione TIMESTAMP,
+  stato STATO_UTENTE,
+  psw_hash VARCHAR(255)
+);
+```
+
+**N.B. Ho cambiato la convenzione perchè mi sembra di aver capito che sia questa quella adatta, si usa l'underscore tra le parole, non il dash, ovvero SNAKE CASE, e ho aggiunto anche i prefissi a tabelle TBL**
+
+Continuiamo...
+
+```sql
+-- CREAZIONE DEL DB (SE NON ESISTE GIA')
+CREATE DATABASE IF NOT EXISTS db_sv_monei_tracker;
+USE db_sv_monei_tracker;
+
+-- CREAZIONE ENUM PRIMA DELLA TABELLA
+CREATE TYPE STATO_UTENTE AS ENUM ('attivo', 'disattivo');
+CREATE TYPE RUOLO_UTENTE AS ENUM ('standard', 'pro', 'admin');
+
+-- CREIAMO L'ESTENSIONE CITEXT PER LE MAIL
+CREATE EXTENSION citext;
+
+--CREAZIONE DELLE TABELLE 
+CREATE TABLE tbl_utente IF NOT EXISTS (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(30),
+  cognome VARCHAR(30),
+  email CITEXT,
+  ruolo RUOLO_UTENTE,
+  data_creazione TIMESTAMP,
+  stato STATO_UTENTE,
+  psw_hash VARCHAR(255)
+);
+
+CREATE TYPE TIPO_CATEGORIA AS ENUM ('ingresso', 'uscita');
+
+CREATE TABLE tbl_categoria IF NOT EXISTS (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255),
+  tipo TIPO_CATEGORIA
+);
+
+CREATE TYPE TIPO_CONTO AS ENUM ('Carta di credito','Contanti','Carta di debito','Banca')
+
+CREATE TABLE tbl_conto IF NOT EXISTS (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255),
+  tipo TIPO_CONTO,
+  saldo_attuale DECIMAL,
+  id_utente REFERENCES tbl_utente(id)
+)
+
+CREATE TABLE tbl_tag IF NOT EXISTS (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255),
+  id_categoria REFERENCES tbl_categoria(id)
+)
+
+CREATE TYPE TIPO_MOVIMENTO AS ENUM ('ingresso','uscita')
+
+CREATE TABLE tbl_movimento IF NOT EXISTS (
+  id SERIAL PRIMARY KEY,
+  importo DECIMAL,
+  descrizione TEXT,
+  tipo TIPO_MOVIMENTO,
+  id_utente REFERENCES tbl_utente(id),
+  id_conto REFERENCES tbl_conto(id),
+  id_categoria REFERENCES tbl_categoria(id)
+)
+
+CREATE TABLE tbl_movimento_tag IF NOT EXISTS (
+  id_movimento REFERENCES tbl_movimento(id),
+  id_tag REFERENCES tbl_tag(id),
+  PRIMARY KEY(id_movimento, id_tag)
+)
+```
+
+Allora ho scritto tutte le tabelle, voglio controllare come si scriveva la primary key composta da due external ma mi sembrava fosse così come ho fatto qui sopra.
+
+Ecco in questa domanda stackoverflow c'è il modo, c'è anche scritto come dare un nome personalizzato alla primary key composta:
+https://stackoverflow.com/questions/23533184/primary-key-for-multiple-columns-in-postgresql
+
+Intanto che ci guardo stavo pensando a come testare il init.sql e mi sono venuti in mente due modi, un qualche controllore di sintassi online esiste sicuro. 
+
+**Ma perchè non usare un pò di trial & error?**
