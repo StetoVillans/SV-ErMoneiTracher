@@ -997,4 +997,4 @@ Error response from daemon: failed to create task for container: failed to creat
 
 O ho sbagliato a definire la cartella dentro il container o non mi spiego bene.
 
-Adesso ho finito il tempo, proverò poi, comunque da tenere d'occhio
+Adesso ho finito il tempo, proverò poi, comunque da tenere d'occhio questo sopra
