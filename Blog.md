@@ -979,3 +979,22 @@ CTRL+V
 ```
 
 Ormai che ci sono visto che per ora le versioni sono queste le vado a mettere anche nel ReadME.md
+
+Allora inizio il trial and error.
+
+Ricevo un errore sul fatto che la porta è già usata, perchè su sto pc ho un postgres in esecuzione evidentemente, quindi modifico il docker compose e il .env per usare una variabile anche per la porta del container.
+
+Allora mi da questo errore:
+
+```bash
+stetoubuntu@stetoubuntu-hp:~/Scrivania/Progetti/SV-ErMoneiTracher$ sudo docker compose up -d
+[+] up 3/3
+ ✔ Network sv-ermoneitracher_default Created                                                                                                                                                0.1s
+ ✔ Volume sv-ermoneitracher_db       Created                                                                                                                                                0.0s
+ ✔ Container sv-ermoneitracher-db-1  Created                                                                                                                                                0.1s
+Error response from daemon: failed to create task for container: failed to create shim task: OCI runtime create failed: runc create failed: unable to start container process: error during container init: error mounting "/home/stetoubuntu/Scrivania/Progetti/SV-ErMoneiTracher/database/init.sql" to rootfs at "/docker-entrypoint-initdb.d": mount src=/home/stetoubuntu/Scrivania/Progetti/SV-ErMoneiTracher/database/init.sql, dst=/docker-entrypoint-initdb.d, dstFd=/proc/thread-self/fd/29, flags=MS_BIND|MS_REC: not a directory: Are you trying to mount a directory onto a file (or vice-versa)? Check if the specified host path exists and is the expected type
+```
+
+O ho sbagliato a definire la cartella dentro il container o non mi spiego bene.
+
+Adesso ho finito il tempo, proverò poi, comunque da tenere d'occhio
