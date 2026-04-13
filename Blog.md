@@ -674,9 +674,81 @@ services:
   </tr>
 </table>
 
+# 13-04-2026
+
+## Seed del database 
+
+Allora è un pò che non ci metto mano, ma direi che eravamo giunti al fatto che il docker compose ci siamo per ora (del db, poi integreremo gli altri).
+
+Adesso direi che mi devo spostare sul capire come creare una query, un file, per la generazione del database, perchè bene o male abbiamo definito il db, i campi, quindi mi manca fare il file di configurazione vero e proprio.
+
+E qui la meglio direi che, come al solito, è sgooglare.
+
+Con questa docs di docker e articolo di stack overflow ho trovato dove vanno montati i file di init.sql per farli inizializzare al db quando si apre:
+
+https://docs.docker.com/guides/pre-seeding/
+
+https://stackoverflow.com/questions/59715622/docker-compose-and-create-db-in-postgres-on-init
+
+La sezione che mi interessa nei docs è quella "#pre-seed-the-database-by-bind-mounting-a-sql-script"
+
+Dalla sezione ci dice che per seeddare il database con un file sql montandolo all'interno della cartella:
+
+`/docker-entrypoint-initdb.d`
+
+Dal momento in cui abbiamo questa informazione possiamo modificare il docker compose con il metodo per seeddare il database all'avvio del container:
+
+```yml
+services:
+  db:
+    image: postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d
+
+volumes:
+  db:
+    driver: local
+```
+
+Dove `./init.sql` è il percorso bind mount al quale va a pescare il file sql, per ora ho messo questo ma vediamo poi come si svilupperà la struttura del progetto.
+
+Mentre ovviamente come detto poco sopra `/docker-entrypoint-initdb.d` è la directory speciale per il montaggio di file sql di startup.
+
+## Creare l'init.sql
+
+Allora adesso entriamo un pò nel vivo, dobbiamo creare l'init sql, allora sicuramente non mi interessa che sia perfetto, ma deve essere funzionale a ciò che devo fare con il mio db.
+
+Quindi intanto faccio una verifica delle mie competenze di scrittura di file sql sgooglando.
+
+Perchè l'ho fatto a scuola ma potrei essere un pò arrugginito.
+
+Per verificare utilizzo il mio strumento preferito: 
+
+www.postgresql.org/docs/current/sql-syntax.html
+
+DOCUMENTAZIONE
+
+Ok si per ora mi sembra di star leggendo cose che mi tornano, KEY WORD tutte in maiuscolo e identificatori in minuscolo nonostante siano case-insesitive.
+
+Vabbè io inizio a scrivere poi tryal and error e si va avanti.
+
+```sql
+-- CREAZIONE DEL DB (SE NON ESISTE GIA')
+CREATE DATABASE IF NOT EXISTS sv-monei-tracker;
+USE sv-monei-tracker;
+
+--COMINCIAMO A CREARE LE TABELLE MA IN ORDINE PRECISO, PRIMA QUELLE CHE NON DIPENDONO DA ALTRE.
 
 
-
+```
 
 
 
