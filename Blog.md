@@ -765,5 +765,21 @@ O faccio come il tag, che hanno una tabella ponte fra di loro, so che sto scrive
 
 Devo togliere l'id external del movimento dalla categoria, perchè una categoria può far parte di più movimenti, ma in un movimento può esserci una sola categoria.
 
+Anche perchè, in relazione 1:N quindi 1 a molti, l'id external sta dalla parte di molti, non dalla parte di 1.
+
+Ora quindi mi torna molto anche il resto del discorso.
+
+Infatti l'ordine di dichiarazione diventa:
+
+- Utente
+- Categoria
+- Conto
+- Tag
+- Movimento
+- Movimento - tag
+
+Direi, da riverificare ma ora devo chiudere.
+
+RICORDATI DI GUARDARE L'ORDINE DELLE TABELLE PER VEDERE SE HA SENSO...
 
 
