@@ -955,3 +955,27 @@ https://stackoverflow.com/questions/23533184/primary-key-for-multiple-columns-in
 Intanto che ci guardo stavo pensando a come testare il init.sql e mi sono venuti in mente due modi, un qualche controllore di sintassi online esiste sicuro. 
 
 **Ma perchè non usare un pò di trial & error?**
+
+## VERIFICHIAMO STO INIT.SQL
+
+Allora prima di tutto magari lo creo come file:
+
+```bash
+cd database
+
+nano init.sql
+
+CTRL+V dell'init fatto sopra
+```
+
+Magari se creassi anche il docker compose tanto plafonato sarebbe meglio:
+
+```bash
+cd ..
+
+nano docker-compose.yml
+
+CTRL+V
+```
+
+Ormai che ci sono visto che per ora le versioni sono queste le vado a mettere anche nel ReadME.md
