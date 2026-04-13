@@ -41,7 +41,7 @@ erDiagram
 
     CONTO {
         serial id
-        serial id-utente
+        serial id-utente external
         varchar(255) nome
         ENUM(tipo) tipo
         decimal saldo-attuale
@@ -49,9 +49,9 @@ erDiagram
 
     MOVIMENTO {
         serial id-movimento
-        serial id-utente
-        serial id-conto
-        serial id-categoria
+        serial id-utente external
+        serial id-conto external
+        serial id-categoria external
         decimal importo
         text descrizione
         ENUM(tipo) tipo
@@ -59,7 +59,6 @@ erDiagram
 
     CATEGORIA {
         serial id
-        serial id-movimento
         varchar(255) nome
         enum(tipo) tipo
     }
@@ -67,12 +66,12 @@ erDiagram
     TAG {
         serial id
         string nome
-        serial id-categoria
+        serial id-categoria external
     }
 
     MOVIMENTO-TAG {
-        serial movimento_id
-        serial tag_id
+        serial movimento_id external
+        serial tag_id external
     }
 
     UTENTE ||--o{ CONTO : possiede

@@ -744,11 +744,26 @@ Vabbè io inizio a scrivere poi tryal and error e si va avanti.
 -- CREAZIONE DEL DB (SE NON ESISTE GIA')
 CREATE DATABASE IF NOT EXISTS sv-monei-tracker;
 USE sv-monei-tracker;
-
---COMINCIAMO A CREARE LE TABELLE MA IN ORDINE PRECISO, PRIMA QUELLE CHE NON DIPENDONO DA ALTRE.
-
-
 ```
+
+Mi ricordo che devo cominciare a creare le tabelle però seguendo un ordine preciso, perchè se creo una tabella che ha chiavi esterne su tabelle che non ho ancora dichiarato darà errore.
+
+Guardando le mie tabelle sicuramente la prima è "utente" perchè è l'unica senza chiavi esterne.
+
+e subito dopo si può fare Conto perchè ha una sola chiave esterna che è l'utente, che abbiamo appena creato quindi non ci sono problemi.
+
+Adesso però mi viene un dubbio per il quale tirerò una bella sgooglata:
+
+*Allora, io dopo queste tabelle ho tutte tabelle che hanno sempre una chiave esterna che non è stata già dichiarata, c'è nel senso: Movimento ha id-categoria come external; categoria ha id-movimento come external; tag ha id-categoria come external; e movimento-tag ovviamente sono due external. In questo caso? ho sbagliato qualcosa a pianificare il db o mi ricordo male il problema delle dipendenze delle tabelle?*
+
+Effettivamente ci ho fatto caso ora, ma la relazione per come l'ho segnata mi sa di sbagliato, perchè ho fatto bene la relazione Conto -> Movimento, perchè in conto non ho messo l'external del movimento.
+Per la categoria vale lo stesso discorso, o meglio aspe.
+
+O faccio come il tag, che hanno una tabella ponte fra di loro, so che sto scrivendo dimmerda ma sto ragionando.
+
+**Ok si ci sono**
+
+Devo togliere l'id external del movimento dalla categoria, perchè una categoria può far parte di più movimenti, ma in un movimento può esserci una sola categoria.
 
 
 
