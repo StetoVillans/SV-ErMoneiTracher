@@ -1120,5 +1120,160 @@ Per comodità il parametro è `-it`
 
 Ora dentro, le query?
 
+
+## SEEDING DI DATI
+
 Perchè ora come ora non mi viene in mente come fare delle query che mi facciano vedere la struttura delle cartelle, visto che sono in un punto in cui non va la connessione ne approfitto per fare degli insert di seeding all'interno delle tabelle nell'init.sql.
 
+Allora visto che non ho trovato granchè e comunque dovrò inserire dei dati direi che nel seeding aggiungiamo la sezione di insert di dati:
+- Utente, metteiamo un utente di test
+- Conto, mettiamo un conto di test
+- Categoria, mettiamo un tot di categorie standard
+- Tag, mettiamo un tot di tag standard per le categorie
+- Movimento, faccio un paio di movimenti di prova giusto per verifica
+
+Prima di questo mi è venuta in mente una cosa, per convenzione le tabelle si mettono con il plurale, devono contenere più record di quella determinata entità, non sono come le classi in java.
+
+Con questo mi sono anche reso conto che on avevo definito la tabella tags, non so perchè probabilmente distrazione.
+
+Allora:
+
+```sql
+INSERT INTO tbl_utenti (nome, cognome, email, ruolo, stato, psw_hash) VALUES ('Utente', 'Prova', 'utente.prova@gmail.com', 'standard', 'attivo', 'psw_hash_123');
+
+INSERT INTO tbl_conti (nome, tipo, saldo_attuale, id_utente) VALUES ('Carta di esempio', 'Carta di credito', '20,00', '0')
+```
+
+Ho fatto questi due per ora, perchè mi sono venuti un paio di dubbi, verificare se i serial si autocompilano, e poi non so se il serial parte da 0 o da 1, poi se inserire i decimal devo farlo con '20,00' o in altro modo.
+
+Dubbio su serial:
+come da questo post https://neon.com/postgresql/postgresql-tutorial/postgresql-serial serial è come fare un id integer auto incrementato not null.
+E parte da 1, quindi ho risposto a tutto con questo.
+
+Dubbio sul decimal, ho trovato questo docs: https://neon.com/docs/data-types/decimal 
+
+```sql
+CREATE TABLE portfolios (
+    portfolio_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    stock_symbol TEXT NOT NULL,
+    shares_owned DECIMAL(10, 4),
+    price_per_share DECIMAL(10, 2)
+);
+
+INSERT INTO portfolios (user_id, stock_symbol, shares_owned, price_per_share)
+VALUES
+    (101, 'AAPL', 150.1234, 145.67),
+    (102, 'MSFT', 200.000, 214.53);
+```
+
+E mi risponde anche a questo dubbio, la virgola si mette con il punto e non si mettono le virgolette.
+
+Chiariti questi dubbi gli insert corretti dovrebbero essere:
+
+```sql
+INSERT INTO tbl_utenti (nome, cognome, email, ruolo, stato, psw_hash) VALUES ('Utente', 'Prova', 'utente.prova@gmail.com', 'standard', 'attivo', 'psw_hash_123');
+
+INSERT INTO tbl_conti (nome, tipo, saldo_attuale, id_utente) VALUES ('Carta di esempio', 'Carta di credito', 20.00, 1)
+```
+
+Direi che adesso testiamo nel miglior modo possibile, TRIAL AND ERROR
+
+## TRIAL AND ERROR
+
+Allora intanto ho tirato giù in container e i volumi e ritirato su. Sono entrato in psql per fare una query di prova su tbl_utenti:
+
+`prova=# SELECT * FROM tbl_utenti`
+
+Ma non mi ha restituito nulla, mi sembrava strano... Quindi ho sgooglato magari avevo fatto un errore stupido nella query, nella ricerca ho trovato questo comando per psql `\dt` che ti fa vedere tutte le tabelle sulle quali puoi fare query.
+
+Il problema nasce qui, mi ha risposto così:
+
+```psql
+prova-# \dt
+Did not find any tables.
+```
+
+Adesso... Perchè?
+
+O meglio capisco bene che l'init sql sembra non essere andato, ma perchè?
+
+Allora ho fatto:
+
+`docker logs container_tag`
+
+E ho trovato lo sgamo
+
+```bash
+CREATE DATABASE
+
+
+/usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/01-init.sql
+2026-04-14 17:11:20.847 UTC [67] ERROR:  syntax error at or near "NOT" at character 20
+2026-04-14 17:11:20.847 UTC [67] STATEMENT:  CREATE DATABASE IF NOT EXISTS db_sv_monei_tracker;
+psql:/docker-entrypoint-initdb.d/01-init.sql:2: ERROR:  syntax error at or near "NOT"
+LINE 1: CREATE DATABASE IF NOT EXISTS db_sv_monei_tracker;
+```
+
+Adesso però, perchè? mi sembrava che si scrivesse così, SGOOGLE!
+
+Ah sono un coglione.
+
+Il db viene già creato da docker, postgres non supporta il comando `use` e la keyword `if not exists` sui db (sulle tabelle sembra di si).
+
+RI-TRYIAMO E RI-ERRORIAMO!
+
+Ok mi ha dato un errore sul if not exist ma perchè l'ordine l'ho sbagliato.
+
+io ho scritto:
+`CREATE TABLE tbl_utenti IF NOT EXISTS`
+
+Ed è:
+`CREATE TABLE IF NOT EXISTS tbl_utenti`
+
+RI-TRYIAMO E RI-ERRORIAMO! di nuovo
+
+Altro errore, ma a sto giro sono stronzo io proprio, non avevo messo neanche un `;`
+
+RI-TRYIAMO E RI-ERRORIAMO! di nuovo di nuovo
+
+A sto giro errore sul REFERENCES, ma anche questo, sono un babi io perchè basta studiare a modo come si dichiarano le foreign key e si trova l'errore.
+
+Due docs al volo:
+- https://stackoverflow.com/questions/28558920/postgresql-foreign-key-syntax
+- https://neon.com/postgresql/postgresql-tutorial/postgresql-foreign-key
+
+Nel mio caso lo voglio scrivere con il constraint, quindi correggo l'init.
+
+**CHIARISCO GIÀ UN DUBBIO**
+
+Ma se la foreign key è serial come la devo definire dentro alla tabella esterna? INT
+
+Sostanzialmente così:
+
+```sql
+CREATE TABLE IF NOT EXISTS tbl_conti (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255),
+  tipo TIPO_CONTO,
+  saldo_attuale DECIMAL,
+  id_utente INT,
+  CONSTRAINT fk_utente
+    FOREIGN KEY (id_utente)
+    REFERENCES tbl_utenti(id)
+);
+```
+
+RI-TRYIAMO E RI-ERRORIAMO! di nuovo X3
+
+Allora avevo fatto altri due errori cazzata, le parentesi sulle foreign key non le avevo messe.
+
+e poi avevo sbagliato il nome delle tabelle nelle refernces.
+
+RI-TRYIAMO E RI-ERRORIAMO! di nuovo X4
+
+È ARRIVATO FINO ALL'INSERT, GODOOOOOO
+
+Devo solo fare la verifica con psql dei dati all'interno ma direi che ce l'ho fatta.
+
+Ora devo andare, prossima cosa da verificare questa assolutamente subito sopra

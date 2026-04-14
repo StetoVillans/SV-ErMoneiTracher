@@ -1,7 +1,3 @@
--- CREAZIONE DEL DB (SE NON ESISTE GIA')
-CREATE DATABASE IF NOT EXISTS db_sv_monei_tracker;
-USE db_sv_monei_tracker;
-
 -- CREAZIONE ENUM PRIMA DELLA TABELLA
 CREATE TYPE STATO_UTENTE AS ENUM ('attivo', 'disattivo');
 CREATE TYPE RUOLO_UTENTE AS ENUM ('standard', 'pro', 'admin');
@@ -10,7 +6,7 @@ CREATE TYPE RUOLO_UTENTE AS ENUM ('standard', 'pro', 'admin');
 CREATE EXTENSION citext;
 
 --CREAZIONE DELLE TABELLE 
-CREATE TABLE tbl_utente IF NOT EXISTS (
+CREATE TABLE IF NOT EXISTS tbl_utenti (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(30),
   cognome VARCHAR(30),
@@ -23,42 +19,79 @@ CREATE TABLE tbl_utente IF NOT EXISTS (
 
 CREATE TYPE TIPO_CATEGORIA AS ENUM ('ingresso', 'uscita');
 
-CREATE TABLE tbl_categoria IF NOT EXISTS (
+CREATE TABLE IF NOT EXISTS tbl_categorie (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255),
   tipo TIPO_CATEGORIA
 );
 
-CREATE TYPE TIPO_CONTO AS ENUM ('Carta di credito','Contanti','Carta di debito','Banca')
+CREATE TYPE TIPO_CONTO AS ENUM ('Carta di credito', 'Contanti', 'Carta di debito', 'Banca');
 
-CREATE TABLE tbl_conto IF NOT EXISTS (
+CREATE TABLE IF NOT EXISTS tbl_conti (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255),
   tipo TIPO_CONTO,
   saldo_attuale DECIMAL,
-  id_utente REFERENCES tbl_utente(id)
-)
+  id_utente INT,
+  CONSTRAINT fk_utente
+    FOREIGN KEY (id_utente)
+    REFERENCES tbl_utenti(id)
+);
 
-CREATE TABLE tbl_tag IF NOT EXISTS (
+CREATE TABLE IF NOT EXISTS tbl_tag (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255),
-  id_categoria REFERENCES tbl_categoria(id)
-)
+  id_categoria INT,
+  CONSTRAINT fk_categoria
+    FOREIGN KEY (id_categoria)
+    REFERENCES tbl_categorie(id)
+);
 
-CREATE TYPE TIPO_MOVIMENTO AS ENUM ('ingresso','uscita')
+CREATE TYPE TIPO_MOVIMENTO AS ENUM ('ingresso','uscita');
 
-CREATE TABLE tbl_movimento IF NOT EXISTS (
+CREATE TABLE IF NOT EXISTS tbl_movimenti (
   id SERIAL PRIMARY KEY,
   importo DECIMAL,
   descrizione TEXT,
   tipo TIPO_MOVIMENTO,
-  id_utente REFERENCES tbl_utente(id),
-  id_conto REFERENCES tbl_conto(id),
-  id_categoria REFERENCES tbl_categoria(id)
-)
+  id_utente INT,
+  CONSTRAINT fk_utente
+    FOREIGN KEY (id_utente) 
+    REFERENCES tbl_utenti(id),
+  id_conto INT,
+  CONSTRAINT fk_conto
+    FOREIGN KEY (id_conto)
+    REFERENCES tbl_conti(id),
+  id_categoria INT,
+  CONSTRAINT fk_categoria
+    FOREIGN KEY (id_categoria)
+    REFERENCES tbl_categorie(id)
+);
 
-CREATE TABLE tbl_movimento_tag IF NOT EXISTS (
-  id_movimento REFERENCES tbl_movimento(id),
-  id_tag REFERENCES tbl_tag(id),
+CREATE TABLE IF NOT EXISTS tbl_tags (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(255),
+  id_categoria INT,
+  CONSTRAINT fk_categoria
+    FOREIGN KEY (id_categoria)
+    REFERENCES tbl_categorie(id)
+);
+
+CREATE TABLE IF NOT EXISTS tbl_movimenti_tags (
+  id_movimento INT,
+  CONSTRAINT fk_movimento
+    FOREIGN KEY (id_movimento) 
+    REFERENCES tbl_movimenti(id),
+  id_tag INT,
+  CONSTRAINT fk_tag
+    FOREIGN KEY (id_tag) 
+    REFERENCES tbl_tag(id),
   PRIMARY KEY(id_movimento, id_tag)
-)
+);
+
+
+--INSERT DI DATI
+
+INSERT INTO tbl_utenti (nome, cognome, email, ruolo, stato, psw_hash) VALUES ('Utente', 'Prova', 'utente.prova@gmail.com', 'standard', 'attivo', 'psw_hash_123');
+
+INSERT INTO tbl_conti (nome, tipo, saldo_attuale, id_utente) VALUES ('Carta di esempio', 'Carta di credito', 20.00, 1);
