@@ -9,8 +9,8 @@ services:
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes: 
-      - db:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d
+      - db:/var/lib/postgresql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
 
 volumes:
   db:

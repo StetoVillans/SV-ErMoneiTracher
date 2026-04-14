@@ -998,3 +998,127 @@ Error response from daemon: failed to create task for container: failed to creat
 O ho sbagliato a definire la cartella dentro il container o non mi spiego bene.
 
 Adesso ho finito il tempo, proverò poi, comunque da tenere d'occhio questo sopra
+
+# 14-04-2026
+
+## TRIAL AND ERROR
+
+Ok allora, stavo guardando l'errore che mi ha dato ieri sera, e ho provato a cambiare il bind mount con questo 
+```yml
+      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+```
+
+ed è andato, circa.
+
+Nel senso che ora il container parte ma se faccio docker ps lo vedo restarting:
+
+![alt text](./MediaDocs/image.png)
+
+Andando a vedere i logs del container direi proprio che trovo l'errore:
+
+*"Error in 18+, these Docker images are configured to store database data in a format which is compatible with "pg_ctlcluster" (specifically, using major-version-specific directory names).  This better reflects how PostgreSQL itself works, and how upgrades are to be performed. See also https://github.com/docker-library/postgres/pull/1259
+Counter to that, there appears to be PostgreSQL data in: /var/lib/postgresql/data (unused mount/volume) This is usually the result of upgrading the Docker image without upgrading the underlying database using "pg_upgrade" (which requires both versions).
+
+       The suggested container configuration for 18+ is to place a single mount
+       at /var/lib/postgresql which will then place PostgreSQL data in a
+       subdirectory, allowing usage of "pg_upgrade --link" without mount point
+       boundary issues.
+
+       See https://github.com/docker-library/postgres/issues/37 for a (long)
+       discussion around this process, and suggestions for how to do so.jor-version-specific directory names).  This better reflects how
+       PostgreSQL itself works, and how upgrades are to be performed.
+
+       See also https://github.com/docker-library/postgres/pull/1259
+
+       Counter to that, there appears to be PostgreSQL data in:
+         /var/lib/postgresql/data (unused mount/volume)
+
+       This is usually the result of upgrading the Docker image without
+       upgrading the underlying database using "pg_upgrade" (which requires both
+       versions).
+
+       The suggested container configuration for 18+ is to place a single mount
+       at /var/lib/postgresql which will then place PostgreSQL data in a
+       subdirectory, allowing usage of "pg_upgrade --link" without mount point
+       boundary issues.
+
+       See https://github.com/docker-library/postgres/issues/37 for a (long)
+       discussion around this process, and suggestions for how to do so"*
+
+Arrivato a questo punto, nel quale ho letto l'errore, e non ho comunque capito bene che cosa vuole, si sgoogla.
+
+AHhhhhhh
+
+```
+Starting with PostgreSQL 18, the official Docker Hub Postgres images changed the default data directory structure to support easier major-version upgrades. 
+The error occurs because you are likely using a volume mounted to the old path (/var/lib/postgresql/data) while the new image expects a version-specific layout (e.g., /var/lib/postgresql/18/main)
+```
+
+Adesso ho capito anche cosa mi diceva l'errore.
+
+Devo semplicemente cambiare che cartella uso per salvare i dati postgres in maniera consistente nel volume visto che hanno cambiato il default di quella cartella in postgresql 18.
+
+ALEEEE CONTAINER UP AND RUNNING DOPO IL CAMBIAMENTO
+
+## PROVE DB
+
+Adesso mi conviene fare delle prove per vedere se il io init ha fatto tutto come doveva.
+
+Sicuramente:
+- Query per vedere il db
+- Query per vedere tutte le tabelle
+
+
+## PSQL
+
+Allora per fare queste query devo entrare con psql
+
+Vorrei sgooglare perchè non mi ricordo ma dove sono ora con il treno non va quindi trial and error.
+
+Allora sicuramente bisognava fare docker exec
+
+`docker exec psql`
+
+Però non mi ricordo il resto degli argomenti, vediamo se scrivendolo mi dice qualcosa
+
+Allora ho appena provato e mi da un importante insight:
+![alt text](./MediaDocs/image2.png)
+
+Facciamo così:
+
+`sudo docker exec 9990000a98da psql --help`
+
+Troppo forte, ora guardo i parametri che mi servivano.
+
+Allora:
+- -d, nome del database a cui connettersi
+- -p, porta del database
+- -U, Username
+- -W, password prompt, di solito dovrebbe andare in automatico
+
+Quindi nel mio caso attuale visto il .env di prova sarà:
+
+`sudo docker exec 9990000a98da psql -d prova -U prova`
+
+Ok non mi ha dato errore ma non sono dentro a psql, forse perchè docker exec di per se' non era interattivo, provo a vedere docker exec help.
+
+Esattamente, devo runnarlo con il -i.
+
+Mh, qualcosa è andato, ma non mi sembra di essere in psql:
+
+![alt text](./MediaDocs/image3.png)
+
+Non capisco sinceramente, arriva il momento della sgooglata...
+
+Ah diobo sono un coglione.
+
+il parametro `-i` rende solo interattivo, ma se il docker non sputa fuori un terminale non serve a nulla, serve anche il `-t` per allocare uno pseudo terminale e quindi allora dopo funziona.
+
+Per comodità il parametro è `-it`
+
+`docker exec -it tag-container psql -d nome-db -U nome-utente-db`
+
+Ora dentro, le query?
+
+Perchè ora come ora non mi viene in mente come fare delle query che mi facciano vedere la struttura delle cartelle, visto che sono in un punto in cui non va la connessione ne approfitto per fare degli insert di seeding all'interno delle tabelle nell'init.sql.
+
