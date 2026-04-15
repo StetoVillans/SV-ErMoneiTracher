@@ -1369,3 +1369,14 @@ prova=#
 
 ```
 
+Ho fatto anche un'altra verifica e anche l'insert all'interno dei conti è andato bene:
+
+```psql
+prova=# select * from tbl_conti;
+ id |       nome       |       tipo       | saldo_attuale | id_utente 
+----+------------------+------------------+---------------+-----------
+  1 | Carta di esempio | Carta di credito |         20.00 |         1
+(1 row)
+
+prova=# 
+```
