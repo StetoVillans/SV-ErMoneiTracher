@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS tbl_utenti (
   cognome VARCHAR(30),
   email CITEXT,
   ruolo RUOLO_UTENTE,
-  data_creazione TIMESTAMP,
+  data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   stato STATO_UTENTE,
   psw_hash VARCHAR(255)
 );

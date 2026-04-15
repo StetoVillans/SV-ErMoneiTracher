@@ -1277,3 +1277,95 @@ RI-TRYIAMO E RI-ERRORIAMO! di nuovo X4
 Devo solo fare la verifica con psql dei dati all'interno ma direi che ce l'ho fatta.
 
 Ora devo andare, prossima cosa da verificare questa assolutamente subito sopra
+
+# 15-04-2026
+
+## Prove su DB dopo cambiamenti di ieri
+
+Mi sono inanzitutto collegato al container aprendo psql come già visto:
+
+`docker exec -it d65dbd6cfe98 psql -d prova -U prova`
+
+Intanto ho fatto il comando `\dt` che mi fa vedere tutte le tabelle su cui è possibile fare query, e quello che vedo già mi piace:
+
+```psql
+prova=# \dt
+               List of tables
+ Schema |        Name        | Type  | Owner 
+--------+--------------------+-------+-------
+ public | tbl_categorie      | table | prova
+ public | tbl_conti          | table | prova
+ public | tbl_movimenti      | table | prova
+ public | tbl_movimenti_tags | table | prova
+ public | tbl_tag            | table | prova
+ public | tbl_tags           | table | prova
+ public | tbl_utenti         | table | prova
+(7 rows)
+
+prova=# 
+```
+
+Adesso provo a fare una query sulla tabella utenti così vediamo se è andato correttamente anche l'insert:
+
+```psql
+prova=# SELECT * from tbl_utenti;
+ id |  nome  | cognome |         email          |  ruolo   | data_creazione | stato  |   psw_hash   
+----+--------+---------+------------------------+----------+----------------+--------+--------------
+  1 | Utente | Prova   | utente.prova@gmail.com | standard |                | attivo | psw_hash_123
+(1 row)
+``` 
+
+INCREDIBILE E' ANDATO, l'unica cosa che non è andata è il timestamp ma credo di averlo definito male io nella tabella.
+
+Credo che gli vada dato un constraint tipo DEFAULT NOW().
+
+Il sito neon viene in clutch di nuovo: https://neon.com/postgresql/postgresql-date-functions/postgresql-current_timestamp
+
+Quindi cambio da così:
+
+```sql
+--CREAZIONE DELLE TABELLE 
+CREATE TABLE IF NOT EXISTS tbl_utenti (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(30),
+  cognome VARCHAR(30),
+  email CITEXT,
+  ruolo RUOLO_UTENTE,
+  data_creazione TIMESTAMP,
+  stato STATO_UTENTE,
+  psw_hash VARCHAR(255)
+);
+```
+
+a così:
+
+```sql
+--CREAZIONE DELLE TABELLE 
+CREATE TABLE IF NOT EXISTS tbl_utenti (
+  id SERIAL PRIMARY KEY,
+  nome VARCHAR(30),
+  cognome VARCHAR(30),
+  email CITEXT,
+  ruolo RUOLO_UTENTE,
+  data_creazione TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  stato STATO_UTENTE,
+  psw_hash VARCHAR(255)
+);
+```
+
+Adesso provo a tirare giù il container e vediamo se è andata
+
+Incredibile, troppo forte:
+
+```psql
+
+prova=# SELECT * FROM tbl_utenti;
+ id |  nome  | cognome |         email          |  ruolo   |       data_creazione       | stato  |   psw_hash   
+----+--------+---------+------------------------+----------+----------------------------+--------+--------------
+  1 | Utente | Prova   | utente.prova@gmail.com | standard | 2026-04-15 06:14:59.296563 | attivo | psw_hash_123
+(1 row)
+
+prova=# 
+
+```
+
