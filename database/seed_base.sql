@@ -1,0 +1,1 @@
+INSERT INTO tbl_categorie (nome, tipo) VALUES ('Salute', 'uscita'; )

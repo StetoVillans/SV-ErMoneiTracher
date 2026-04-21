@@ -1380,3 +1380,102 @@ prova=# select * from tbl_conti;
 
 prova=# 
 ```
+
+# 20-04-2026
+
+## Dove ero rimasto
+
+Allora avevo fatto tutte le prove sul db ma il punto qual'era? Inserire dei dati di seed all'interno del db, ora che abbiamo fatto delle prove, e sta più o meno direi andando tutto, possiamo effettivamente finirlo.
+
+Direi che quello che ci interessa è mettere dei dati relativi all'uso dell'app, per spiegarmi meglio:
+- Mettere tutte le categorie predefinite;
+- Mettere qualche tag per categoria
+E forse direi basta, nel senso che in questo momento ho un dubbio per il giusto flusso da usare nel progetto.
+
+Il dubbio è: faccio dei record di test anche sulle altre tabelle oppure evito perchè potrebbero essere nocivi per l'app.
+
+Perchè lo penso, perchè fare un'utente admin di esempio, potrebbe fare in modo che mi scordi che l'ho creato e lasciare un refuso nel progetto che potrebbe aprirlo a potenziali vulnerabilità.
+
+Quindi che faccio?
+
+Perchè se non lo faccio, lascio il progetto sicuro, ma se non testo gli insert, vabbè non è un mega test, però per vedere il funzionamento dell'app sono utili, anche per vedere i dati che si intrecciano per capire se ho fatto tutto correttamente.
+
+Probabilmente potrei implementare una soluzione per dividere Produzione e Development, SGOOGLEEE.
+
+Ok si sgooglando ho trovato che la mia riflessione è giusta, ora la domanda è, come separo development e produzione nel mio progetto.  
+
+## Categorie e Tag principali
+
+Allora come categorie direi:
+- Spese
+  - Salute
+  - Sport
+  - Cibo
+  - Moda
+  - Regali
+  - Trasporti pubblici
+  - Auto\moto
+  - Abbonamenti
+  - 
+- Ingressi
+  - Stipendio
+  - Bonifico
+  - Paghetta
+  - Investimenti
+  - Prestiti
+  - Regali
+
+Adesso per ogni categoria i tag:
+
+- Salute
+  - Visite
+  - Medicine
+  - Trattamenti
+- Sport
+  - Palestra
+  - Sport generale
+  - Attrezzatura
+- Cibo
+  - Pranzo
+  - Cena
+  - Caffè
+  - Merenda
+  - Spesa
+- Moda
+  - Vestiti
+  - Accessori
+  - Scarpe
+- Regali
+  - Qui non saprei ora come ora
+- Trasporti pubblici
+  - Taxi
+  - Treno
+  - Aereo
+  - Barca
+  - Bus
+- Auto\Moto
+  - Ricambi
+  - Benzina
+  - Bollo
+  - Assicurazione
+  - Meccanico
+  - Estetica
+- Abbonamenti
+  - Musica
+  - Video
+  - AI
+  - Varie
+
+Per gli ingressi in realtà non saprei che tag inserire in realtà, sono già abbastanza parlanti le categorie c'è...
+
+# 21-04-2026
+
+Buongiorno, eccoci di nuovo, ieri ho scritto a manoni le principali categorie con i tag.
+
+Oggi scriviamo il vero e proprio insert.
+
+Per fare una cosa a modo per bene, l'init lo teniamo con solo dentro la creazione delle tabelle.
+
+Il seeding con i dati di base lo mettiamo in un'altro file, poi dopo scoprirò come usarli tutti e due ahahahah.
+
+Creo il file seed-base.sql
