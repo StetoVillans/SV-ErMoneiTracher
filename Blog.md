@@ -1479,3 +1479,6 @@ Per fare una cosa a modo per bene, l'init lo teniamo con solo dentro la creazion
 Il seeding con i dati di base lo mettiamo in un'altro file, poi dopo scoprirò come usarli tutti e due ahahahah.
 
 Creo il file seed-base.sql
+
+Ok scritto tutto direi, adesso bisogna vedere come effettivamente aggiungerlo dentro al db del mio container, ci guardo dopo
+
