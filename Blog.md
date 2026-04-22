@@ -1483,7 +1483,7 @@ Creo il file seed-base.sql
 Ok scritto tutto direi, adesso bisogna vedere come effettivamente aggiungerlo dentro al db del mio container, ci guardo dopo
 
 # 22-04-2026
-# Come aggiugere il file see-base.sql
+## Come aggiugere il file see-base.sql
 
 Allora una via facile per ora sarebbe copiare il contenuto, infondo all'init sql, ed effettivamente per testing fammelo fare al volo.
 
@@ -1532,3 +1532,17 @@ Apparte che effettivamente a me che mi importa se ho un file di creazione e uno 
 Il mio dubbio ora è un'altro, usando questa metodologia il rischio è che in fase di sviluppo si usi un seed con simulazione di dati che però non voglio che ci sia il rischio che passi in produzione.
 
 Allora per adesso lo lascio com'è ora, quindi sezioni tutte incollate insieme in un unico file, uno tra i prossimi punti di sviluppo deve esser capire come si dividono gli ambienti di sviluppo e di produzione su una webapp.
+
+## Development VS Production
+
+Allora, ho fatto una ricerca ma il problema sostanziale è uno.
+
+Il mio risultato è stato che la produzione tiene dentro i dati live e il development no in quanto è sviluppo, MA DAI
+
+Quindi devo scavare più a fondo, per capire come far sì che il mio progetto sia production ready, cosa devo fare EFFETTIVAMENTE per separare questi ambienti nel mio progetto.
+
+Ok allora c'è da dire una cosa, forse mi sto facendo prendere dall'insicurezza, di base produzione e sviluppo saranno sempre separati anche solo dal fatto che uno sta su un server pubblico e uno è in locale sul mio pc.
+
+Adesso forse allora la domanda diventa un'altra.
+
+## Come mi assicuro che il codice sia organizzato in modo da non avere discrepanze tra production e sviluppo e che non ci siano problemi nel passare da uno all'altro?
