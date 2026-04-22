@@ -119,10 +119,60 @@ INSERT INTO tbl_tags (nome, id_categoria) VALUES ('Ricambi', 7), ('Bollo', 7), (
 INSERT INTO tbl_tags (nome, id_categoria) VALUES ('Musica', 8), ('Video', 8), ('AI', 8), ('Varie', 8);
 
 -- UTENTI DEMO
-INSERT INTO tbl_utenti (nome, cognome, email, ruolo, stato, psw_hash) VALUES ('Utente', 'Demo', 'utente.demo@gmail.com', 'standard', 'attivo', 'PSWUtenteDemo'), ('Admin', 'Demo', 'admin.demo@gmail.com', 'admin', 'attivo', 'PSWAdminDemo');
+INSERT INTO tbl_utenti (nome, cognome, email, ruolo, stato, psw_hash) VALUES 
+('Utente', 'Demo', 'utente.demo@gmail.com', 'standard', 'attivo', 'PSWUtenteDemo'), 
+('Admin', 'Demo', 'admin.demo@gmail.com', 'admin', 'attivo', 'PSWAdminDemo'),
+('Mario', 'Rossi', 'mario.rossi@gmail.com', 'standard', 'attivo', 'PSWUtenteDemo'),
+('Giacomo', 'Verdi', 'giacomo.verdi@gmail.com', 'pro', 'attivo', 'PSWUtenteDemo'),
+('Rosa', 'Gialli', 'rosa.gialli@gmail.com', 'pro', 'attivo', 'PSWUtenteDemo'),
+('Antonio', 'Bianchi', 'antonio.bianchi@gmail.com', 'standard', 'attivo', 'PSWUtenteDemo'),
+('Roberto', 'Blu', 'roberto.blu@gmail.com', 'standard', 'attivo', 'PSWUtenteDemo'),
+('Stefano', 'Gialli', 'stefano.gialli@yahoo.it', 'standard', 'attivo', 'PSWUtenteDemo'),
+('Enrico', 'Papi', 'enrico.papi@yahoo.it', 'standard', 'attivo', 'PSWUtenteDemo'),
+('Robert', 'Downey JR', 'robert.downeyjr@yahoo.it', 'pro', 'disattivo', 'PSWUtenteDemo');
 
 -- CONTO DEMO
-INSERT INTO tbl_conti (nome, tipo, saldo_attuale, id_utente) VALUES ('Carta di esempio', 'Carta di credito', 20.00, 1);
+INSERT INTO tbl_conti (nome, tipo, saldo_attuale, id_utente) VALUES 
+('Credito utente demo', 'Carta di credito', 200.00, 1),
+('Debito utente demo', 'Carta di debito', 2000.00, 1),
+('Nemo', 'Carta di credito', 1000.00, 2),
+('Dori', 'Carta di debito', 2000.00, 2),
+('Scemo chi legge', 'Carta di credito', 100000.00, 3),
+('Cazzo ho letto', 'Carta di debito', 856.00, 3),
+('Thuram', 'Carta di credito', 151.00, 4),
+('Chiellini', 'Carta di debito', 14678.00, 4),
+('Credito Rosa', 'Carta di credito', 9782.00, 5),
+('Debito Rosa', 'Carta di debito', 1234.00, 5),
+('Zaino', 'Contanti', 0.00, 6),
+('Marsupio', 'Banca', 1.00, 6),
+('Salmone', 'Contanti', 124.00, 7),
+('Tonno', 'Banca', 77.00, 7),
+('Antonio', 'Contanti', 159753.00, 8),
+('Marco', 'Banca', 957.00, 8),
+('New Holland', 'Contanti', 357.00, 9),
+('Lamborghini', 'Banca', 159.00, 9),
+('HP', 'Contanti', 852.00, 10),
+('Lenovo', 'Banca', 258.00, 10),;
 
--- MOVIMENTI DEMO
-INSERT INTO tbl_movimenti (importo, descrizione, tipo, id_utente, id_conto, id_categoria) VALUES (20.00, 'Movimento di prova 1', 'uscita', 1, 1, 2);
+-- 20 MOVIMENTI DEMO PER UTENTE DEMO (id_utente = 1)
+INSERT INTO tbl_movimenti (importo, descrizione, tipo, id_utente, id_conto, id_categoria) VALUES
+(20.00, 'Spesa supermercato Conad', 'uscita', 1, 1, 2),
+(55.00, 'Rifornimento benzina', 'uscita', 1, 2, 3),
+(1200.00, 'Stipendio mensile', 'ingresso', 1, 2, 1),
+(9.99, 'Abbonamento streaming', 'uscita', 1, 1, 4),
+(35.50, 'Cena pizza con amici', 'uscita', 1, 1, 5),
+(18.00, 'Farmacia prodotti vari', 'uscita', 1, 1, 6),
+(250.00, 'Vendita oggetto usato', 'ingresso', 1, 2, 7),
+(70.00, 'Bollette luce e gas', 'uscita', 1, 2, 8),
+(15.00, 'Colazione e bar', 'uscita', 1, 1, 5),
+(500.00, 'Bonus annuale', 'ingresso', 1, 2, 1),
+(42.90, 'Acquisto scarpe sportive', 'uscita', 1, 1, 9),
+(7.50, 'Parcheggio centro città', 'uscita', 1, 1, 10),
+(65.00, 'Cena sushi', 'uscita', 1, 1, 5),
+(300.00, 'Rimborso spese lavoro', 'ingresso', 1, 2, 7),
+(24.99, 'Acquisto libro online', 'uscita', 1, 1, 11),
+(89.00, 'Manutenzione auto', 'uscita', 1, 2, 3),
+(130.00, 'Regalo compleanno ricevuto', 'ingresso', 1, 2, 7),
+(12.00, 'Lavanderia automatica', 'uscita', 1, 1, 12),
+(220.00, 'Freelance progetto web', 'ingresso', 1, 2, 1),
+(31.40, 'Pranzo fuori ufficio', 'uscita', 1, 1, 5);
