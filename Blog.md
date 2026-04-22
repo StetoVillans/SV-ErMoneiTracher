@@ -1482,3 +1482,53 @@ Creo il file seed-base.sql
 
 Ok scritto tutto direi, adesso bisogna vedere come effettivamente aggiungerlo dentro al db del mio container, ci guardo dopo
 
+# 22-04-2026
+# Come aggiugere il file see-base.sql
+
+Allora una via facile per ora sarebbe copiare il contenuto, infondo all'init sql, ed effettivamente per testing fammelo fare al volo.
+
+Ok c'ho dato un occhio e anche solo dal logs sembra che abbia fatto diversi insert quindi dovrebbe essere andato, ora lo testo al volo con psql.
+
+Ok top è andato:
+
+```psql
+prova=# \dt
+               List of tables
+ Schema |        Name        | Type  | Owner 
+--------+--------------------+-------+-------
+ public | tbl_categorie      | table | prova
+ public | tbl_conti          | table | prova
+ public | tbl_movimenti      | table | prova
+ public | tbl_movimenti_tags | table | prova
+ public | tbl_tag            | table | prova
+ public | tbl_tags           | table | prova
+ public | tbl_utenti         | table | prova
+(7 rows)
+
+prova=# select * from tbl_categorie;
+ id |        nome        |   tipo   
+----+--------------------+----------
+  1 | Salute             | uscita
+  2 | Sport              | uscita
+  3 | Cibo               | uscita
+  4 | Moda               | uscita
+  5 | Regali             | uscita
+  6 | Trasporti Pubblici | uscita
+  7 | Auto\Moto          | uscita
+  8 | Abbonamenti        | uscita
+  9 | Stipendio          | ingresso
+ 10 | Bonifico           | ingresso
+ 11 | Paghetta           | ingresso
+ 12 | Investimenti       | ingresso
+ 13 | Prestiti           | ingresso
+ 14 | Regali             | ingresso
+(14 rows)
+```
+
+E ci sono anche i tags.
+
+Apparte che effettivamente a me che mi importa se ho un file di creazione e uno di seed di base, tanto sono entrambi cose che sul db andranno fatte a prescindere, quindi si possono anche mettere su un seed unico.
+
+Il mio dubbio ora è un'altro, usando questa metodologia il rischio è che in fase di sviluppo si usi un seed con simulazione di dati che però non voglio che ci sia il rischio che passi in produzione.
+
+Allora per adesso lo lascio com'è ora, quindi sezioni tutte incollate insieme in un unico file, uno tra i prossimi punti di sviluppo deve esser capire come si dividono gli ambienti di sviluppo e di produzione su una webapp.
