@@ -1546,3 +1546,97 @@ Ok allora c'è da dire una cosa, forse mi sto facendo prendere dall'insicurezza,
 Adesso forse allora la domanda diventa un'altra.
 
 ## Come mi assicuro che il codice sia organizzato in modo da non avere discrepanze tra production e sviluppo e che non ci siano problemi nel passare da uno all'altro?
+Allora io farei così direi, i dati che ho ora sono quelli che normalmente dovrebbero essere in produzione, ovvero:
+- Schema di tabelle del database
+- Dati di base sulle categorie ed i tags
+
+Apparte questo il resto dipende dall'ambiente di produzione perchè gli utenti si creano, i conti si creano e così anche i movimenti, quindi non ce ne sono di già predefiniti.
+
+Allora potrebbe aver senso, per testing e development, creare un seed diverso per il db, solo per inserire i dati di demo. quindi procedo proprio a fare questo:
+
+## Separare seeding
+
+Ho creato il file:
+
+`init-dev.sql`
+
+Ho creato degli inserti di prova per:
+- 2 utenti, 1 admin e 1 standard;
+- 1 conto per l'utente standard;
+- 1 movimento per l'utente standard in categoria palestra
+
+Faccio un test per vedere, ma prima.
+
+Avendo un seed diverso, non voglio contaminare il docker compose che ho fatto fino ad ora, che ha la configurazione giusta per la produzione, con un init che poi magari mi scordo di togliere.
+
+Quindi creo un nuovo docker compose, specifico per il development, che poi richiamerò in maniera specifica su docker compose.
+
+```yml
+services:
+  db:
+    container_name: db_svemt_dev
+    image: postgres:18
+    restart: always
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    volumes: 
+      - db:/var/lib/postgresql
+      - ./database/init-dev.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+
+volumes:
+  db:
+    driver: local
+```
+
+Ho aggiunto anche una piccola chicca, che è il container name, che adesso metto anche in quello di produzione, mi permette di comandare i container non tramite hash ma tramite nome, molto più comodo ovviamente.
+
+Visto che mi scordo SVEMT vuol dire StefanoVillaniErMoneiTracker.
+
+Adesso non i ricordo, come avvio un docker compose con il file specifico per il file?
+
+Documentazione!
+
+Ok era parametro `-f` e poi scrivo il nome del file, quindi adesso testo.
+
+`docker compose -f docker-compose-dev.yml up -d`
+
+Funziona anche il container name topperia:
+
+`docker logs db_svemt_dev`
+
+Comunque c'è un errrore, ho scordato una virgola.
+
+Ok dopo aver risolto ho riavviato e sembra andare, faccio una prova di query da psql:
+
+```psql
+prova=# select * from tbl_movimenti;
+ id | importo |     descrizione      |  tipo  | id_utente | id_conto | id_categoria 
+----+---------+----------------------+--------+-----------+----------+--------------
+  1 |   20.00 | Movimento di prova 1 | uscita |         1 |        1 |            2
+(1 row)
+```
+
+Top ziopera!
+
+MOLTO MOLTO BENE!
+
+Adesso?
+
+Ho l'impressione che adesso posso iniziare a lavorare sul backend direi.
+
+Magari l'unica cosa prima di iniziare il backend fare un pò di altri dati demo così da avere una buona quantità di dati con cui lavorare in fase di development, direi che posso puntare a:
+- 10 utenti demo
+- con 2 conti per utente
+- 20 movimenti per utente con conti utilizzati misti
+
+## NEXT TODO
+
+Così da avere una buona base e poi fare qualche query di test, salvarla, e salvare alcune query che saranno utili nell'app, quindi:
+
+- [ ] Seeding demo
+- [ ] Cercare query utili x progetto 
+- [ ] Farle e salvarle sql

@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: db_svemt
+    container_name: db_svemt_dev
     image: postgres:18
     restart: always
     environment:
@@ -11,7 +11,7 @@ services:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
     volumes: 
       - db:/var/lib/postgresql
-      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+      - ./database/init-dev.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
 
 volumes:
   db:
