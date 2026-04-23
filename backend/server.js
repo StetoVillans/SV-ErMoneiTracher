@@ -1,12 +1,11 @@
 import Fastify from 'fastify'
+import rotta from './rotte/prima-rotta.js'
 
 const fastify = Fastify({
   logger: true
 })
 
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' }
-})
+fastify.register(rotta)
 
 // Run the server!
 const start = async () => {
