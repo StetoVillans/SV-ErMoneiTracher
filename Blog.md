@@ -1770,3 +1770,193 @@ Installazione con npm, come immaginavo
 Prima però ovviamente nel terminale mi metto dentro alla cartella di backend:
 
 `cd backend`
+
+# 23-04-2026
+
+Continuo ad iniziare Fastify.
+
+Creiamo il file server.js, uso es6 come standard.
+Allora ho creato il file, seguendo bene o male la guida:
+
+```js
+import Fastify from 'fastify'
+
+const fastify = Fastify({
+  logger: true
+})
+
+fastify.get('/', function (request, reply) {
+  reply.send({ hello: 'world' })
+})
+
+// Run the server!
+fastify.listen({ port: 3000 }, function (err, address) {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+  // Server is now listening on ${address}
+})
+```
+
+Volevo personalizzare il package.json ma mi da questo errore quando scrivo il nome del progetto, il file è così ora:
+
+```json
+{
+  "name": "SV-MONEITRACKER",
+  "description": "description",
+  "authors": "author",
+  "version": "1.0.0",
+  "main": "pathToMain",
+  "type" : "module",
+  "dependencies": {
+    "fastify": "^5.8.5"
+  }
+}
+```
+
+e l'errore è questo:
+
+`String does not match the pattern of "^(?:(?:@(?:[a-z0-9-~][a-z0-9-.~]*)?/[a-z0-9-.])|[a-z0-9-])[a-z0-9-._~]*$".`
+
+Ah ok sono solo un pò babi ma non sapendo leggere le regex ci può stare, se sapessi leggerle avrei capito da solo il problema.
+
+Il package.json ha delle regole strette per la nomenclatura del progetto:
+
+- NO Maiuscole
+- NO inizi con `_` o `.`
+- NO spazi
+- SOLO Alfanumerici con `-` `_` e `.`
+
+Ok infatti seguendo queste regole non da l'errore, ora il package.json è compilato a modo:
+
+```json
+{
+  "name": "sv-ermoneitracher-backend",
+  "description": "Il backend del progetto sv-ermoneitracher",
+  "authors": "Steto",
+  "version": "0.0.1",
+  "main": "./server.js",
+  "type" : "module",
+  "dependencies": {
+    "fastify": "^5.8.5"
+  }
+}
+```{
+  "name": "sv-ermoneitracher-backend",
+  "description": "Il backend del progetto sv-ermoneitracher",
+  "authors": "Steto",
+  "version": "0.0.1",
+  "main": "./server.js",
+  "type" : "module",
+  "dependencies": {
+    "fastify": "^5.8.5"
+  }
+}
+
+Ok continuo fastify va là, subito dopo dice che supporta async e await quindi vediamo di scriverlo con quello.
+
+La documentazione indica poi una cosa, uno dei problemi nella creazione di un backend è come gestire multipli file, l'architettura del codice e bootstrapping asincrono, che per correttezza, ammetto che non so che cazzo sia, quindi ora lo sgooglo.
+
+*Il bootstrapping asincrono nello sviluppo web si riferisce all'inizializzazione e al caricamento dinamico delle risorse e dei contenuti di una pagina o applicazione, senza bloccare il rendering iniziale e senza necessità di ricaricare l'intera pagina*
+
+Ok effettivamente sapevo cosa fosse, non avevo idea si chiamasse così, THE MORE YOU LEARN.
+
+---
+
+In javascript, ogni cosa è un oggetto, in fastify, ogni cosa è un plugin.
+
+Prima di tuffarsi nei plugin fa un'esempio, prima inizializza il server base che abbiamo fatto anche noi, ma la rotta la dichiara in un file esterno.
+
+Così, file principale:
+
+```js
+import Fastify from 'fastify'
+import firstRoute from './our-first-route.js'
+/**
+ * @type {import('fastify').FastifyInstance} Instance of Fastify
+ */
+const fastify = Fastify({
+  logger: true
+})
+
+fastify.register(firstRoute)
+
+fastify.listen({ port: 3000 }, function (err, address) {
+  if (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+  // Server is now listening on ${address}
+})
+```
+
+E il file esterno della rotta:
+
+```js
+// our-first-route.js
+
+/**
+ * Encapsulates the routes
+ * @param {FastifyInstance} fastify  Encapsulated Fastify Instance
+ * @param {Object} options plugin options, refer to https://fastify.dev/docs/latest/Reference/Plugins/#plugin-options
+ */
+async function routes (fastify, options) {
+  fastify.get('/', async (request, reply) => {
+    return { hello: 'world' }
+  })
+}
+
+//ESM
+export default routes;
+```
+
+Nell'esempio viene usata la `register` API di Fastify, che è l'unico modo per aggiungere rotte, plugin etcetc
+
+Quindi fammi provare nel mio proggeto, creo una cartella per il file delle rotte, perchè non so bene se dovrò avere più file per più rotte però proviamo
+
+`mkdir rotte` 
+
+Ok fatto, la mia rotta è:
+
+```js
+import Fastify from 'fastify'
+
+const fastify = Fastify({
+  logger: true
+})
+
+async function rotta(fastify, options) {
+    fastify.get('/', async (request, reply) => {
+        return { hello: 'world' }
+    })
+}
+
+export default rotta;
+```
+
+e il file server per importarla:
+
+```js
+import Fastify from 'fastify'
+import rotta from './rotte/prima-rotta.js'
+
+const fastify = Fastify({
+  logger: true
+})
+
+fastify.register(rotta)
+
+// Run the server!
+const start = async () => {
+  try {
+    await fastify.listen({ port: 3000 })
+  } catch (err) {
+    fastify.log.error(err)
+    process.exit(1)
+  }
+}
+start()
+```
+
+Dopo tratta come il framework gestisce connessioni asyncrone e perchè è comodo, lo continuo in un altro momento in cui ho più tempo perchè bisogna capirlo a modo.
