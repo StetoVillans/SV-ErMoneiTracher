@@ -2028,3 +2028,6 @@ Provo a rifare l'npm install boh
 
 Ah ok chiudendo il file e riaprendolo mi ha preso la modifica, top.
 
+Allora ho incollato l'esempio del db, comunque l'ho compreso, si usa register per registrare il plugin la prima volta, da quel momento non è più necessario regsitrarlo e si può usare ovunque.
+
+Tra l'altro carica i plugin nell'ordine nel quale li richiami.
