@@ -1,0 +1,13 @@
+{
+  "name": "testing-fastify-backend",
+  "description": "Prove sul framework Fastify",
+  "authors": "Steto",
+  "version": "0.0.1",
+  "main": "./server.js",
+  "type": "module",
+  "dependencies": {
+    "@fastify/mongodb": "^10.0.0",
+    "fastify": "^5.8.5",
+    "fastify-plugin": "^5.1.0"
+  }
+}
