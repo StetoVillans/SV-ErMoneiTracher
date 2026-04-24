@@ -4,9 +4,8 @@
   "authors": "Steto",
   "version": "0.0.1",
   "main": "./server.js",
-  "type" : "module",
+  "type": "module",
   "dependencies": {
     "fastify": "^5.8.5"
   }
 }
-

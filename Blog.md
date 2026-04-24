@@ -1960,3 +1960,71 @@ start()
 ```
 
 Dopo tratta come il framework gestisce connessioni asyncrone e perchè è comodo, lo continuo in un altro momento in cui ho più tempo perchè bisogna capirlo a modo.
+
+# 24-06-2026
+
+Ok eravamo arrivati all'esempio delle connessioni asincrone, me lo sono letto al fly e ho capito perchè è facile da usare fastify, allora, lui fa l'esempio con una connessione ad un db, che è facilissima.
+
+N.B. l'esempio usa mongoDB, io cercerò qualcosa per postgres, ci sarà un plugin anche per quello.
+
+Sto pensando, perchè lui fa un pò di cose che però non vorrei mettere nel progetto, o meglio dopo dovrei ripulire tutto e non ne ho voglia, sai finchè è una rotta, tanto quelle le dovrò usare idgaf, però connessioni a db varie etc.
+
+Facciamo così, faccio una cartella fastify, dove seguo la documentazione e imparo tutto quello che mi serve.
+
+Dopo aver fatto la cartella ho installato i pacchetti che mi servono, però mi sono reso conto di una falla nel mio piano, se faccio una cartella fastify nella cartella del backend, facendo un npm install mi inserisce i plugin installati nelle dipendenze del mio progetto effettivo.
+
+Perchè questo è un problema?
+
+Semplicemente perchè, come detto ora, la cartella di fastify deve essere una cartella per fare prove etc etc, non voglio che poi facendo le prove installo pacchetti, che poi mi rimangono nel package.json e mi scordo che siano lì, perchè poi questi sono i modi in cui si introducono le vulnerabilità. Giusto per nota infatti ora il package.json del progetto è diventato così:
+
+```json
+{
+  "name": "sv-ermoneitracher-backend",
+  "description": "Il backend del progetto sv-ermoneitracher",
+  "authors": "Steto",
+  "version": "0.0.1",
+  "main": "./server.js",
+  "type": "module",
+  "dependencies": {
+    "@fastify/mongodb": "^10.0.0",
+    "fastify": "^5.8.5",
+    "fastify-plugin": "^5.1.0"
+  }
+}
+```
+
+Adesso provo un'altra roba, provo a fare una cartella di backend separata completamente, e creare un package.json lì, vedo se gli npm install dopo si basano sul percorso in cui li lancio o vanno in conflitto per qualche motivo.
+
+Quindi:
+
+`mkdir fastify`
+
+Nella root.
+
+Ho fatto un nuovo package per l'altra cartella, ora provo l'npm install da qui.
+
+Ok top è andata, mi ha fatto il node modules nella cartella di fastify e il package.json del mio backend non lo ha toccato
+
+![alt text](/MediaDocs/image4.png)
+
+Ho notato solo una cosa, io ho fatto npm install di fastify, fastiy-plugin e mongodb, nelle dipendenze però non mi ha messo fastify plugin:
+
+```json
+{
+  "name": "testing-fastify-backend",
+  "description": "Prove sul framework Fastify",
+  "authors": "Steto",
+  "version": "0.0.1",
+  "main": "./server.js",
+  "type": "module",
+  "dependencies": {
+    "@fastify/mongodb": "^10.0.0",
+    "fastify": "^5.8.5"
+  }
+}
+```
+
+Provo a rifare l'npm install boh
+
+Ah ok chiudendo il file e riaprendolo mi ha preso la modifica, top.
+
