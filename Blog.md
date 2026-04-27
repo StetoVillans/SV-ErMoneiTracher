@@ -2031,3 +2031,13 @@ Ah ok chiudendo il file e riaprendolo mi ha preso la modifica, top.
 Allora ho incollato l'esempio del db, comunque l'ho compreso, si usa register per registrare il plugin la prima volta, da quel momento non è più necessario regsitrarlo e si può usare ovunque.
 
 Tra l'altro carica i plugin nell'ordine nel quale li richiami.
+
+# 27-04-2026
+
+Allora oggi voglio continuare con il backend, però voglio vedere se trovo un corso su fastify così da imparare da qualcuno che lo sa usare bene per imparare le best practices.
+
+Facciamo così, prima di continuare su fastify, faccio una ricerca sulle strutture di backend migliori, così da impararne una e usare quella nei prossimi progetti.
+
+Allora, non ho cercato la struttura perchè fastify magari ne ha una specifica, infatti ho cercato un corso su udemy di fastify ma non l'ho trovato, però ho trovato un crash course di 40 min, così domani lo seguo e fuoco alle polveri!
+
+Stasera me lo scarico sul pc e domani lo guardo!
