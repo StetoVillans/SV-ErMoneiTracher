@@ -2098,3 +2098,86 @@ e poi cambio la prima rotta Items per restituire gli items invece di quell'ogget
 `reply.send({'test' : 'Hello'})`
 
 Per ora mi fermo, sono a 9 minuti spaccati
+
+## Bene continuiamo.
+
+siamo rimasti alla prima rotta che restituisce l'array di dati definito in items.js
+
+Costruiamo una seconda rotta, per prendere solo un parametro.
+
+```js
+fastify.get('/items/:id', (req, reply) => {
+    const {id} = req.params
+
+    const item = items.find(item => item.id === id)
+    
+    reply.send(item)
+})
+```
+
+è un pò junky però facciamo così non lavorando con un db, ho notato che però facendo la richiesta:
+
+`GET http://localhost:5000/items/1 HTTP/1.1`
+
+Mi rispondeva così:
+
+```
+HTTP/1.1 200 OK
+content-length: 0
+Date: Thu, 30 Apr 2026 17:32:36 GMT
+Connection: close
+```
+
+Perchè?
+
+Perchè lui gli items li salva tutti tra virgolette, io gli id li avevo salvati senza virgolette.
+
+Questo cosa implica?
+
+Che non posso fare il controllo come lo ha fatto lui, perchè lui ha usato
+
+`items.id === id`
+
+Questo si rompe perchè per i numeri non si possono usare i `===` mi sembra eh, non voglio dire una stronzata ora ma il motivo è quello, non mi ricordo la ragione tecnica in questo momento.
+
+Infatti usando `==` funziona.
+
+Nota curiosa da approfondire, se uso `==` la risposta è:
+
+```
+HTTP/1.1 200 OK
+content-type: application/json; charset=utf-8
+content-length: 34
+Date: Thu, 30 Apr 2026 17:35:34 GMT
+Connection: close
+
+{
+  "id": 2,
+  "name": "item2",
+  "price": 20
+}
+```
+
+Se uso `=` e basta invece, la risposta è:
+
+```
+HTTP/1.1 200 OK
+content-type: application/json; charset=utf-8
+content-length: 36
+Date: Thu, 30 Apr 2026 17:36:28 GMT
+Connection: close
+
+{
+  "id": "2",
+  "name": "item1",
+  "price": 10
+}
+```
+
+All'occhio sembra uguale, però l'id lo tratta in maniera diversa, con due uguali me lo spara fuori come un numero, con uno solo come una strinfa, perchè?
+
+Da sgooglare ovviamente.
+
+
+Ora il tutoria sposta le rotte create in server.js in un file separato per organizzazione, e iniziamo anche il concetto di plugin.
+

@@ -1,6 +1,6 @@
 let items = [
     {
-        'id' : 1,
+        'id' : '1',
         'name' : 'item1',
         'price' : 10
     },
