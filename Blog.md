@@ -2041,3 +2041,60 @@ Facciamo così, prima di continuare su fastify, faccio una ricerca sulle struttu
 Allora, non ho cercato la struttura perchè fastify magari ne ha una specifica, infatti ho cercato un corso su udemy di fastify ma non l'ho trovato, però ho trovato un crash course di 40 min, così domani lo seguo e fuoco alle polveri!
 
 Stasera me lo scarico sul pc e domani lo guardo!
+
+# 30-04-2026
+
+Inizio il crash course su fastify.
+
+Intanto installo l'estensione REST Client, per avere un postman integrato con vs code.
+
+Allora vado a creare un'altra cartella solo per questo corso, la chiamo fastify-crash-couse.
+
+Prima di tutto andiamo a creare il nostro package.json con `npm init -y` e poi andiamo a installare la dipendenza fastify con `npm install fastify` andiamo a mettere insieme anche `fastify-swagger` e `uuid`.
+
+Swagger ci permetterà di fare delle open api con un'ottima documentazione e uuid di creare id univochi.
+
+Andiamo poi a mettere una DEV dependencies, che è una dipendenza che si usa solo in fase di sviluppo che è:
+
+`npm install -D nodemon`
+
+E dovrebbe permetterci di non dover riavviare ogni volta il server per vedere i cambiamenti.
+
+Andiamo a mettere 2 script nel package json:
+- start, script per avviare il server
+- dev, script per avviarlo in modalità sviluppo
+
+Dove start usa node, e dev nodemon.
+
+Andiamo quindi a creare il server.js.
+
+Ok allora ho seguito il tutorial, c'era già un problema, lui passava la porta come parametro diretto dichiarando la variabile e inserendola come parametro e basta.
+
+Adesso questo non si può più fare, bisogna passare perforza un parametro di tipo oggetto per il metodo `.listen`
+
+Creiamo la prima rotta, l'abbiamo fatta così in questo tutorial:
+
+```js
+fastify.get('/items', (req, reply) => {
+    reply.send({test: 'Hello'})
+})
+```
+
+Ora la testiamo con un file, req.http, per fare le richieste basta scriverle in questo file, e il REST client entrerà in campo con il tasto "send request", e ti farà vedere la risposta del server.
+
+Così per renderlo più chiaro:
+![alt text](./MediaDocs/image5.png)
+
+Per i dati useremo un file .js per evitare di collegare database e varie per adesso.
+
+Allora fatto il file items.js, semplicemente c'è un array e poi dall'array si fa un export così da porterlo usare in altri file.
+
+fatto questo lo importiamo nel server.js con 
+
+`const items = require('./Items')`
+
+e poi cambio la prima rotta Items per restituire gli items invece di quell'oggetto statico che c'era prima
+
+`reply.send({'test' : 'Hello'})`
+
+Per ora mi fermo, sono a 9 minuti spaccati
