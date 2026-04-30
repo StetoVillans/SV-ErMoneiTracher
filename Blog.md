@@ -2181,3 +2181,12 @@ Da sgooglare ovviamente.
 
 Ora il tutoria sposta le rotte create in server.js in un file separato per organizzazione, e iniziamo anche il concetto di plugin.
 
+Nella creazione del file, per crearlo come plugin dobbiamo scriverlo come funzione, che prende questi tre parametri di base per poter funzionare:
+
+`function itemRoutes(fastify, options, done) {`
+
+OVviamente spostiamo anche i dati.
+
+E poi per registrare il plugin nel server.js
+
+`fastify.register(require('./routes/items'))`
