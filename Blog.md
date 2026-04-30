@@ -2190,3 +2190,5 @@ OVviamente spostiamo anche i dati.
 E poi per registrare il plugin nel server.js
 
 `fastify.register(require('./routes/items'))`
+
+Allora manca qualcosa rispetto al tutorai, da un errore, probabilmente perchè ora fastify necessita di qualcosa in più, mi indica che manca la chiamata a chiamare la funzione done. ma non so come funzioni ovviamente ahhahahah
