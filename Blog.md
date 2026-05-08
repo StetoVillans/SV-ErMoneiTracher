@@ -2208,3 +2208,189 @@ Ora infatti provando le rotte funzionano.
 
 Comunque ero arrivato a questo minutaggio: 12:45, continuo da qui.
 
+Ora vediamo il secondo parametro delle rotte che abbiamo dichiarato, quindi le "Options"
+
+Le andiamo a definire prima della rotta le file routes/items.js
+
+Deve essere un oggetto, lo possiamo chiamare come vogliamo.
+
+Andiamo sostanzialmente a definire uno schema di risposte per ogni tipo di risposta e possiamo definire cosa ritorna.
+
+```
+schema: {
+        response: {
+            200: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'string' },
+                        name: { type: 'string' },
+                        price: { type: 'number' }
+                    }
+                }
+            }
+        }
+    }
+```
+
+Per utilizzarlo basta inserirlo come secondo argomento nella richiesta:
+
+`fastify.get('/items', getItemsRoutesOptions, (req, reply) => {`
+
+E per come lo avevo scritto rimane identico l'output, però se io facessi così:
+
+Commento l'id
+```js
+  schema: {
+        response: {
+            200: {
+                type: 'array',
+                items: {
+                    type: 'object',
+                    properties: {
+                        // id: { type: 'string' },
+                        name: { type: 'string' },
+                        price: { type: 'number' }
+                    }
+                }
+            }
+        }
+    }
+```
+
+L'output diventa 
+
+```
+[ //array
+  { //oggetto
+    "name": "item1", 
+    "price": 10
+  },
+  {
+    "name": "item2",
+    "price": 20
+  },
+  {
+    "name": "item3",
+    "price": 30
+  }
+]
+```
+
+Adesso nel tutorial vuole fare l'opzione per il get item singolo, però voglio provare a farlo prima io piuttosto che seguire il tutorial.
+
+L'ho fatto molto simile, se non fosse che deve restituire un singolo oggetto quindi non gli specifico che ritorni un array.
+
+L'ho scritto così:
+```js
+const getItemRouteOptions = {
+    schema: {
+        response: {
+            200: {
+                type: 'object',
+                properties: {
+                    // id: { type: 'string' },
+                    name: { type: 'string' },
+                    price: { type: 'number' }
+                }
+            }
+        }
+    }
+}
+```
+
+Senza implementarlo la risposta arriva così:
+
+```http
+{
+  "id": "2",
+  "name": "item1",
+  "price": 10
+}
+```
+
+Implementandolo:
+```http
+{
+  "name": "item1",
+  "price": 10
+}
+```
+
+Oh top ho fatto preciso quello che diceva nel video.
+
+Adesso mi fa notare però che in entrambi gli schema, la parte degli item è la stessa, ovvero l'oggetto item è lo stesso.
+
+E dovendolo usare in altre parti del codice, possiamo creare un oggetto item separato per semplificarci il lavoro.
+
+Quindi ancora prima dello schema definiamo l'oggetto:
+
+```js
+
+const Item = {
+  type: 'object',
+  properties: {
+    id: {type: 'string'},
+    name: {type: 'string'},
+    price: {type: 'number'}
+  }
+}
+```
+
+E quindi poi gli schema diventano così:
+```js
+
+//Definizione delle options oggetti
+const getItemsRoutesOptions = {
+    schema: {
+        response: {
+            200: {
+                type: 'array',
+                items: Item
+            }
+        }
+    }
+}
+
+const getItemRouteOptions = {
+    schema: {
+        response: {
+            200: {
+                Item
+            }
+        }
+    }
+}
+```
+
+ahhh okkokokoko
+
+Stavo ricevendo un errore per come lo avevo scritto (nella request del singolo oggetto) e non capivo.
+
+Effettivamente se dopo lo status 200 scrivo la graffa di nuovo è come se dicessi che è un oggetto di oggetto, perchè poi scrivo dentro Item, che è un oggetto.
+
+La scritta corretta è questa:
+```js
+//Definizione delle options oggetti
+const getItemsRoutesOptions = {
+    schema: {
+        response: {
+            200: {
+                type: 'array',
+                items: Item
+            }
+        }
+    }
+}
+
+const getItemRouteOptions = {
+    schema: {
+        response: {
+            200: Item
+        }
+    }
+}
+```
+
+Sono arrivato a 18:47
