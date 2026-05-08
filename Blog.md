@@ -2192,3 +2192,19 @@ E poi per registrare il plugin nel server.js
 `fastify.register(require('./routes/items'))`
 
 Allora manca qualcosa rispetto al tutorai, da un errore, probabilmente perchè ora fastify necessita di qualcosa in più, mi indica che manca la chiamata a chiamare la funzione done. ma non so come funzioni ovviamente ahhahahah
+
+
+# 08-05-2026
+
+Rieccomi lo giuro.
+
+Che bomber non mi ero segnato dove ero arrivato mi sa
+
+Ok, ho sgooglato il problema al quale ero rimasto e ho capito.
+
+Tra i parametri della funzione c'è il callback "done", questo va chiamato infondo alla funzione se voglio che finisca, sennò da errore.
+
+Ora infatti provando le rotte funzionano.
+
+Comunque ero arrivato a questo minutaggio: 12:45, continuo da qui.
+

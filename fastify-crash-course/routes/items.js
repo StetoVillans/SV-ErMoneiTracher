@@ -13,6 +13,7 @@ function itemRoutes(fastify, options, done) {
 
         reply.send(item)
     })
+    done();
 }
 
 module.exports = itemRoutes
