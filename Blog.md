@@ -2394,3 +2394,58 @@ const getItemRouteOptions = {
 ```
 
 Sono arrivato a 18:47
+
+# 09-09-2026  
+
+Dai sono tornato, ho dato una riletta a tutto il blog e mi ricordo cosa stavo facendo, ho riaperto il video al minutaggio, la cosa è che ora voglio magari ripartire da 1 o 2 minuti prima così da vedere dove ero e cosa avevo fatto rispetto a quello che faceva nel video e poi continuare.
+
+Ok si come scrivevo a 18:00 fa notare che ci sono quelle due porzioni di schema uguale.
+
+Quindi si definisce lo schema dell'oggetto singolo, così lo scriviamo solo una volta.
+
+Questo ci aiuta anche in un'altro modo, se le proprietà di item dovessero cambiare, o volessimo cambiare lo schema della risposta sugli item, rischieremmo meno di incappare in errori e incosistenze.
+
+Perchè se avessi lo schema definito due volte per gli oggetti, se mi scordassi di aggiornarlo in uno dei due riceverei risposte incosistenti.
+
+Prima di aggiungere ed eliminare oggetti etc...
+
+Vuole creare dei controller adesso:
+
+Ovvero, oltre allo schema nelle funzioni di options possiamo aggiungere un handler, che andrà a sostituire questa parte della chiamata alla richiesta:
+
+PRIMA
+fastify.get('/items', getItemsRoutesOptions, (req, reply) => {
+        reply.send(items)
+    })
+
+DOPO
+fastify.get('/items', getItemsRoutesOptions)
+
+Quindi si toglie l'handler dalla chiamata e si sposta nella funzione di option.
+
+Dopo lo schema possiamo andare a scrivere:
+
+const getItemRouteOptions = {
+    schema: {
+        response: {
+            200: Item
+        }
+    }
+}
+
+const getItemRouteOptions = {
+    schema: {
+        response: {
+            200: Item
+        }
+    },
+    handler: function (req, reply) {
+      reply.send(Item)
+    },
+}
+
+Adesso, così dovrebbe esser giusto, devo riguardare come funzionava la richiesta dal file .http, credo dovessi mettere un estensione.
+
+19:50
+
+Oltre che l'estensione devo anche reinstallare Fastify, dopo metto proprio la guida nel readme su cosa fare quando si copia
