@@ -105,6 +105,10 @@ npm i fastify fastify-swagger uuid
 
 Per scaricare i pacchetti di esecuzione di fastify (backend).
 
+Fastify swagger ci darà un'ottima documentazione per le nostre openAPI.
+
+uuid ci aiuterà a genererare uuid randomici.
+
 Ci potrebbero essere due intoppi:
 - il primo, l'installazione di node non ha messo la cartella all'interno di PATH, si può fare a mano
 - L'esecuzione degli script è disabilitata sul dispositivo, powershell admin, e mettere dentro: Set-ExecutionPolicy RemoteSigned
@@ -113,9 +117,13 @@ Poi per il development
 
 npm i -D nodemon
 
-Poi modifichiamo gli script in package.json
+Poi modifichiamo gli script in package.json così:
 
-
+"main": "server.js",
+  "scripts": {
+    "start": "node server",
+    "dev": "nodemon server"
+  },
 
 
 ### Init.sql

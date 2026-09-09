@@ -2399,6 +2399,8 @@ Sono arrivato a 18:47
 
 # 09-09-2026  
 
+## Controller - Handler
+
 Dai sono tornato, ho dato una riletta a tutto il blog e mi ricordo cosa stavo facendo, ho riaperto il video al minutaggio, la cosa è che ora voglio magari ripartire da 1 o 2 minuti prima così da vedere dove ero e cosa avevo fatto rispetto a quello che faceva nel video e poi continuare.
 
 Ok si come scrivevo a 18:00 fa notare che ci sono quelle due porzioni di schema uguale.
@@ -2450,5 +2452,96 @@ Adesso, così dovrebbe esser giusto, devo riguardare come funzionava la richiest
 
 19:50
 
-Oltre che l'estensione devo anche reinstallare Fastify, dopo metto proprio la guida nel readme su cosa fare quando si copia
+Oltre che l'estensione devo anche reinstallare Fastify, dopo metto proprio la guida nel readme su cosa fare quando si copia.
 
+Ho aggiunto praticamente tutto, verifico riguardando l'inizio del video.
+
+Ok fatto, aggiunto anche cosa bisogna cambiare nel package.json
+
+Dicevamo, handler.
+
+Quindi quello che facciamo è, togliere dal fastify.get l'ultimo parametro e lo andiamo a gestire all'interno della definizione dello schema, o meglio subito dopo.
+
+Quindi dopo lo schema andiamo a dare una virgola, e poi dobbiamo dire a questo handler che sarà una funzione che prende come parametri, req e reply, ovvero quello che faceva anche prima, e poi cosa farà la funzione?
+
+Quello che faceva prima! quindi prima era definita così la funzione.
+
+
+(req, reply) => {
+        reply.send(items)
+}
+
+Ora sarà:
+
+function (req, reply) {
+  reply.send(items)
+}
+
+Subito dopo alla definizione di handler:
+
+handler: function (req, reply) {
+  reply.send(items)
+}
+
+Ah ok ho capito, il mio dubbio era, come funziona la dichiarazione delle options, c'è lo schema deve essere json, ma perchè se metto l'handler poi posso scriver una funzione? separati semplicemente da una virgola?
+
+Perchè quando scrivo schema: e handler: è come se li stessi scrivendo come parametri della rotta che viene chiamata, ma sono staccatti per migliorare la leggibilità del codice.
+
+Faccio la stessa cosa in autonomia per il get single item.
+
+Lui in realtà usa come prima:
+
+function (param) {
+  corpo funzione
+}
+
+Magari prima la notazione freccia non era supportata, ma ora sta andando tranquillamente, quindi questo funziona:
+
+handler: (req, reply) => {
+    const { id } = req.params
+
+    const item = items.find(item => item.id = id)
+
+    reply.send(item)
+}
+
+Come funziona questo:
+
+handler: function (req, reply) {
+    reply.send(items)
+}
+
+Adesso mi fa anche creare la cartella controller e creare il file itemController.js
+
+Ci andiamo prima di tutto a menttere l'origine dei dati.
+
+Ovvero il nostro file item.js con dentro il json di oggetti.
+
+Quello che poi andiamo sostanzialmente a fare è spostare in delle funzioni dedicate:
+- getItems
+- getItem
+
+Gli handler che abbiamo creato prima, così da rendere ancora più pulito il codice ancora.
+
+Da qui poi facciamo:
+
+module.exports = {
+  getItems,
+  getItem
+}
+
+E dopo li importiamo nel file delle rotte per sostituire l'handler fatto prima:
+
+const {getItems, getItem} = require('percorso')
+
+## fastify swagger
+
+Per prima cosa lo andiamo a registrare nel server.js, ogni volta che si installa un plugin bisogna registrarlo.
+
+Va poi a farci mettere una serie di parametri, tutti visualizzabili da documentazione.
+
+Ho fatto tutto ma mi da un errore:
+
+{"level":50,"time":1788974873615,"pid":4796,"hostname":"StetoPC","err":{"type":"FastifyError","message":"fastify-plugin: fastify-static - expected '3.x' fastify version, '5.12.2' is installed","stack":"FastifyError: fastify-plugin: fastify-static - expected '3.x' fastify version, '5.12.2' is installed\n    at Object.checkVersion (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\fastify\\lib\\plugin-utils.js:127:11)\n    at Object.registerPlugin (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\fastify\\lib\\plugin-utils.js:150:16)\n    at Boot.override (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\fastify\\lib\\plugin-override.js:29:57)\n    at Boot._loadPlugin (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\avvio\\index.js:439:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"FST_ERR_PLUGIN_VERSION_MISMATCH","name":"FastifyError","statusCode":500},"msg":"fastify-plugin: fastify-static - expected '3.x' fastify version, '5.12.2' is installed"}
+
+Dopo sgoogle e fixiamo, per ora basta.

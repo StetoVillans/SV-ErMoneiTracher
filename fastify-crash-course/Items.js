@@ -2,15 +2,15 @@ let items = [
     {
         'id' : '1',
         'name' : 'item1',
-        'price' : 10
+        'price' : 22
     },
     {
-        'id' : 2,
+        'id' : '2',
         'name' : 'item2',
         'price' : 20
     },
     {
-        'id' : 3,
+        'id' : '3',
         'name' : 'item3',
         'price' : 30
     }
