@@ -82,6 +82,42 @@ erDiagram
     TAG ||--o{ MOVIMENTO-TAG : collega
 ```
 
+## Configuration
+
+Prima di tutto, se si è su dispositivo windows, scaricare node.js dal sito di Node e questa estensione per VS Code:
+
+Name: REST Client
+Id: humao.rest-client
+Description: REST Client for Visual Studio Code
+Version: 0.25.1
+Publisher: Huachao Mao
+VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=humao.rest-client
+
+Una volta installato provare a fare:
+
+node --version
+
+Quindi, se tutto ok, fare poi:
+
+npm init -y
+
+npm i fastify fastify-swagger uuid
+
+Per scaricare i pacchetti di esecuzione di fastify (backend).
+
+Ci potrebbero essere due intoppi:
+- il primo, l'installazione di node non ha messo la cartella all'interno di PATH, si può fare a mano
+- L'esecuzione degli script è disabilitata sul dispositivo, powershell admin, e mettere dentro: Set-ExecutionPolicy RemoteSigned
+
+Poi per il development
+
+npm i -D nodemon
+
+Poi modifichiamo gli script in package.json
+
+
+
+
 ### Init.sql
 
 ```sql

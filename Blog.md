@@ -1771,6 +1771,8 @@ Prima però ovviamente nel terminale mi metto dentro alla cartella di backend:
 
 `cd backend`
 
+Questo ovviamente perchè se si installa nella root poi il container potrebbe far fatica a trovare i node module, soprattuto perchè containerizzato.
+
 # 23-04-2026
 
 Continuo ad iniziare Fastify.
@@ -2449,3 +2451,4 @@ Adesso, così dovrebbe esser giusto, devo riguardare come funzionava la richiest
 19:50
 
 Oltre che l'estensione devo anche reinstallare Fastify, dopo metto proprio la guida nel readme su cosa fare quando si copia
+
