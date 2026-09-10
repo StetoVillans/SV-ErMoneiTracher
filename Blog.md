@@ -2676,3 +2676,22 @@ DAJE FUNZIONA
 però non vedo nessuna rotta, vedo che però sono separate in user e code, forse ora vanno categorizzate le rotte per vederle.
 
 A questo ci guardo dopo
+
+Ok trovato il problema, lo swagger funziona così:
+
+Una volta che viene registrato il plugin comincia ad ascoltare per un evento onRoute, che viene scatenato ogni volta che viene registrata una rotta.
+
+Nel mio caso avevo prima la rotta degli item e poi lo swagger, quindi l'evento onRoute andava prima che venisse registrato il plugin swagger, quindi non leggeva mai le rotte.
+
+Mettendo prima lo swagger, ho fixato
+
+Tra l'altro posso definire anche le categorie che mi pare nello swagger per categorizzare le rotte a modo:
+
+tags: [
+      { name: 'user', description: 'User related end-points' },
+      { name: 'code', description: 'Code related end-points' }
+    ],
+
+E dopo nella rotta stessa:
+
+tags: ['user']

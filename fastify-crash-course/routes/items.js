@@ -19,7 +19,8 @@ const Item = {
                 type: 'array',
                 items: Item
             }
-        }
+        },
+        tags: ['user']
     },
     handler: getItems,
 }
