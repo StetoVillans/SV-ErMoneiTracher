@@ -101,7 +101,7 @@ Quindi, se tutto ok, fare poi:
 
 npm init -y
 
-npm i fastify fastify-swagger uuid
+npm i fastify @fastify/swagger @fastify/swagger-ui uuid
 
 Per scaricare i pacchetti di esecuzione di fastify (backend).
 

@@ -2547,3 +2547,132 @@ Ho fatto tutto ma mi da un errore:
 Dopo sgoogle e fixiamo, per ora basta.
 
 Arrivato a 24:00
+
+# 10-09-2026  
+
+Ok ho sgooglato il problema di ieri, immaginavo fosse questo ma non ne avevo ancora l'evidenza.
+
+Allora praticamente, fastify static è il pacchetto che da errore, che non è compatibile con Fastify V5.
+
+Ma io fastify static non l'ho installato, infatti sta dentro a fastify swagger.
+
+Solo che la versione di fastify static che è dentro a fastify swagger non è aggiornata.
+
+Per verificare qual'era il pacchetto colpevole c'è questo comando:
+
+npm ls fastify-static
+
+E questo mi ha dato questa risposta:
+
+fastify-crash-course@1.0.0 C:\Users\steph\SV-ErMoneiTracher\fastify-crash-course
+└─┬ fastify-swagger@5.1.1
+  └── fastify-static@4.6.1
+
+Ok allora, sgooglando ancora ho trovato:
+
+https://www.npmjs.com/package/fastify-swagger
+
+fastify-swagger è stato deprecato, ora c'è: @fastify/swagger
+
+Quindi disinstalliamo il vecchio e installiamo il nuovo
+
+npm uninstall fastify-swagger
+
+Per installare il nuovo:
+
+npm i @fastify/swagger
+
+Ok senza neanche problemi, vediamo se funziona uguale a prima il codice in server.js
+
+Ho giusto cambiato l'import, da così:
+
+fastify.register(require('fastify-swagger'), {
+    exposeRoute: true,
+    routePrefix: '/docs',
+    swagger: {
+        info: { title: 'fastify-api'},
+    },
+})
+
+A così:
+
+fastify.register(require('@fastify/swagger'), {
+    exposeRoute: true,
+    routePrefix: '/docs',
+    swagger: {
+        info: { title: 'fastify-api'},
+    },
+})
+
+Vediamo se va
+
+npm run dev
+
+Non è crashato. E poi vado in localhost sulla rotta che viene definita qui sopra:
+
+http://localhost:5000/docs
+
+Prima di andare sul tutorial, provo a guardare la documentazione di questo nuovo pacchetto per vedere se trovo l'inghippo.
+
+Ho trovato questo esempio di implementazione, vediamo se funziona:
+await fastify.register(require('@fastify/swagger'), {
+  openapi: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Test swagger',
+      description: 'Testing the Fastify swagger API',
+      version: '0.1.0'
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000',
+        description: 'Development server'
+      }
+    ],
+    tags: [
+      { name: 'user', description: 'User related end-points' },
+      { name: 'code', description: 'Code related end-points' }
+    ],
+    components: {
+      securitySchemes: {
+        apiKey: {
+          type: 'apiKey',
+          name: 'apiKey',
+          in: 'header'
+        }
+      }
+    },
+    externalDocs: {
+      url: 'https://swagger.io',
+      description: 'Find more info here'
+    }
+  }
+})
+
+Ok non stava andando e ho capito perchè.
+
+Prima fastify-swagger tirava fuori anche l'ui.
+
+Ora sono due pacchetti separati:
+- Fastify/swagger genera lo schema OpenAPI delle rotte.
+- Fastify/swagger-ui espone la rotta grafica per le rotte.
+
+Quindi dobbiamo aggiungere il pacchetto, aggiorno anche il readme:
+
+npm i @fastify/swagger-ui
+
+E quindi poi, la parte di codice che avevo preso dal getting started per swagger è giusta, devo registrare un'altra rotta per esporre la schermata delle api in sè.
+
+Che guardandoci sostanzialmente è sta stronzata:
+
+fastify.register(require('@fastify/swagger-ui'), {
+  routePrefix: '/docs'
+})
+
+Altra cosa, il metodo fastify.swagger() non serve più.
+
+DAJE FUNZIONA
+
+però non vedo nessuna rotta, vedo che però sono separate in user e code, forse ora vanno categorizzate le rotte per vederle.
+
+A questo ci guardo dopo
