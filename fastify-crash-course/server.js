@@ -19,8 +19,7 @@ fastify.register(require('@fastify/swagger'), {
       }
     ],
     tags: [
-      { name: 'user', description: 'User related end-points' },
-      { name: 'code', description: 'Code related end-points' }
+      { name: 'item', description: 'End-point per gli item' }
     ],
     components: {
       securitySchemes: {
@@ -43,7 +42,7 @@ fastify.register(require('@fastify/swagger-ui'), {
 })
 
 
-fastify.register(require('./routes/items'))
+fastify.register(require('./routes/itemsRoutes'))
 /* fastify.register(require('@fastify/swagger'), {
     exposeRoute: true,
     routePrefix: '/docs',

@@ -2722,4 +2722,23 @@ tags: [
 
 E dopo nella rotta stessa:
 
+```
 tags: ['user']
+```
+
+Giusto per provare un pò sta roba, creo il tag items, visto che abbiamo delle api per degli item.
+
+Ho modificato in server.js da:
+
+```
+tags: [
+      { name: 'user', description: 'User related end-points' },
+      { name: 'code', description: 'Code related end-points' }
+    ],
+```
+
+a:
+
+```
+
+```

@@ -20,7 +20,7 @@ const Item = {
                 items: Item
             }
         },
-        tags: ['user']
+        tags: ['item'],
     },
     handler: getItems,
 }
@@ -29,7 +29,8 @@ const getItemRouteOptions = {
     schema: {
         response: {
             200: Item
-        }
+        },
+        tags: ['item'],
     },
     handler: getItem,
 }
