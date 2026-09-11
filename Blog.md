@@ -2525,14 +2525,17 @@ Gli handler che abbiamo creato prima, così da rendere ancora più pulito il cod
 
 Da qui poi facciamo:
 
+```
 module.exports = {
   getItems,
   getItem
 }
+```
 
 E dopo li importiamo nel file delle rotte per sostituire l'handler fatto prima:
-
+```
 const {getItems, getItem} = require('percorso')
+```
 
 ## fastify swagger
 
@@ -2542,7 +2545,9 @@ Va poi a farci mettere una serie di parametri, tutti visualizzabili da documenta
 
 Ho fatto tutto ma mi da un errore:
 
+```
 {"level":50,"time":1788974873615,"pid":4796,"hostname":"StetoPC","err":{"type":"FastifyError","message":"fastify-plugin: fastify-static - expected '3.x' fastify version, '5.12.2' is installed","stack":"FastifyError: fastify-plugin: fastify-static - expected '3.x' fastify version, '5.12.2' is installed\n    at Object.checkVersion (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\fastify\\lib\\plugin-utils.js:127:11)\n    at Object.registerPlugin (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\fastify\\lib\\plugin-utils.js:150:16)\n    at Boot.override (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\fastify\\lib\\plugin-override.js:29:57)\n    at Boot._loadPlugin (C:\\Users\\steph\\SV-ErMoneiTracher\\fastify-crash-course\\node_modules\\avvio\\index.js:439:25)\n    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)","code":"FST_ERR_PLUGIN_VERSION_MISMATCH","name":"FastifyError","statusCode":500},"msg":"fastify-plugin: fastify-static - expected '3.x' fastify version, '5.12.2' is installed"}
+```
 
 Dopo sgoogle e fixiamo, per ora basta.
 
@@ -2560,13 +2565,17 @@ Solo che la versione di fastify static che è dentro a fastify swagger non è ag
 
 Per verificare qual'era il pacchetto colpevole c'è questo comando:
 
+```
 npm ls fastify-static
+```
 
 E questo mi ha dato questa risposta:
 
+```
 fastify-crash-course@1.0.0 C:\Users\steph\SV-ErMoneiTracher\fastify-crash-course
 └─┬ fastify-swagger@5.1.1
   └── fastify-static@4.6.1
+```
 
 Ok allora, sgooglando ancora ho trovato:
 
@@ -2576,16 +2585,21 @@ fastify-swagger è stato deprecato, ora c'è: @fastify/swagger
 
 Quindi disinstalliamo il vecchio e installiamo il nuovo
 
+```
 npm uninstall fastify-swagger
+```
 
 Per installare il nuovo:
 
+```
 npm i @fastify/swagger
+```
 
 Ok senza neanche problemi, vediamo se funziona uguale a prima il codice in server.js
 
 Ho giusto cambiato l'import, da così:
 
+```
 fastify.register(require('fastify-swagger'), {
     exposeRoute: true,
     routePrefix: '/docs',
@@ -2593,9 +2607,11 @@ fastify.register(require('fastify-swagger'), {
         info: { title: 'fastify-api'},
     },
 })
+```
 
 A così:
 
+```
 fastify.register(require('@fastify/swagger'), {
     exposeRoute: true,
     routePrefix: '/docs',
@@ -2603,10 +2619,13 @@ fastify.register(require('@fastify/swagger'), {
         info: { title: 'fastify-api'},
     },
 })
+```
 
 Vediamo se va
 
+```
 npm run dev
+```
 
 Non è crashato. E poi vado in localhost sulla rotta che viene definita qui sopra:
 
@@ -2615,6 +2634,8 @@ http://localhost:5000/docs
 Prima di andare sul tutorial, provo a guardare la documentazione di questo nuovo pacchetto per vedere se trovo l'inghippo.
 
 Ho trovato questo esempio di implementazione, vediamo se funziona:
+
+```
 await fastify.register(require('@fastify/swagger'), {
   openapi: {
     openapi: '3.0.0',
@@ -2648,6 +2669,7 @@ await fastify.register(require('@fastify/swagger'), {
     }
   }
 })
+```
 
 Ok non stava andando e ho capito perchè.
 
@@ -2659,15 +2681,19 @@ Ora sono due pacchetti separati:
 
 Quindi dobbiamo aggiungere il pacchetto, aggiorno anche il readme:
 
+```
 npm i @fastify/swagger-ui
+```
 
 E quindi poi, la parte di codice che avevo preso dal getting started per swagger è giusta, devo registrare un'altra rotta per esporre la schermata delle api in sè.
 
 Che guardandoci sostanzialmente è sta stronzata:
 
+```
 fastify.register(require('@fastify/swagger-ui'), {
   routePrefix: '/docs'
 })
+```
 
 Altra cosa, il metodo fastify.swagger() non serve più.
 
@@ -2687,10 +2713,12 @@ Mettendo prima lo swagger, ho fixato
 
 Tra l'altro posso definire anche le categorie che mi pare nello swagger per categorizzare le rotte a modo:
 
+```
 tags: [
       { name: 'user', description: 'User related end-points' },
       { name: 'code', description: 'Code related end-points' }
     ],
+```
 
 E dopo nella rotta stessa:
 
