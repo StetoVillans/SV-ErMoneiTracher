@@ -34,7 +34,7 @@ erDiagram
         varchar(30) cognome
         citext email
         ENUM(ruolo) ruolo
-        timestamp data-creazione
+        timestamp data_creazione
         ENUM(stato) stato
         varchar(255) psw_hash
     }
@@ -69,7 +69,7 @@ erDiagram
         serial id_categoria external
     }
 
-    MOVIMENTO-TAG {
+    MOVIMENTO_TAG {
         serial movimento_id external
         serial tag_id external
     }
