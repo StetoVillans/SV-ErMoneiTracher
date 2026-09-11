@@ -29,29 +29,29 @@ Suca sarà da vedere meglio dopo
 ``` mermaid
 erDiagram
     UTENTE {
-        serial id-utente
+        serial id_utente
         varchar(30) nome
         varchar(30) cognome
         citext email
         ENUM(ruolo) ruolo
         timestamp data-creazione
         ENUM(stato) stato
-        varchar(255) psw-hash
+        varchar(255) psw_hash
     }
 
     CONTO {
         serial id
-        serial id-utente external
+        serial id_utente external
         varchar(255) nome
         ENUM(tipo) tipo
-        decimal saldo-attuale
+        decimal saldo_attuale
     }
 
     MOVIMENTO {
-        serial id-movimento
-        serial id-utente external
-        serial id-conto external
-        serial id-categoria external
+        serial id_movimento
+        serial id_utente external
+        serial id_conto external
+        serial id_categoria external
         decimal importo
         text descrizione
         ENUM(tipo) tipo
@@ -66,7 +66,7 @@ erDiagram
     TAG {
         serial id
         string nome
-        serial id-categoria external
+        serial id_categoria external
     }
 
     MOVIMENTO-TAG {
