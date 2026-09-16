@@ -51,7 +51,7 @@ function itemRoutes(fastify, options, done) {
 
     fastify.get('/items/:id', getItemRouteOptions)
 
-    fastify.post(/additems/, postItemRoutesOptions)
+    fastify.post('/additems', postItemRoutesOptions)
     
     done();
 }

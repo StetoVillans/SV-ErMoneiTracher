@@ -2747,6 +2747,8 @@ tags: [
 
 # 16-09-2026
 
+## POST
+
 Continuiamo da dove ero rimasto, quindi video di fastify minuto: 24 
 
 Siamo riusciti a far andare fastify swagger senza problems
@@ -2798,4 +2800,55 @@ Ok finchè crea la rotta è uguale
 
 Anche per le options dell'item, però cambia la risposta con 201, che effettivamente è giusto
 
-Allora noi avremo bisogno del name e del price dalla richiesta, la richiesta post scrive nel body, quindi per ricavarlo in addItem
+Allora noi avremo bisogno del name e del price dalla richiesta, la richiesta post scrive nel body, quindi per ricavarlo in addItem.
+
+Quindi la costruzione dell'item in post è la seguente
+
+const addItem = (req, reply) => {
+    const {name} = req.body
+    const {price} = req.body
+
+    const item = {
+        id: uuidv4(),
+        name,
+        price
+    }    
+}
+
+Dove prendiamo name e price dal body della richiesta, e li mettiamo dentro all'item senza troppe strane cose, l'uuid è quel plugin che abbiamo instalalto all'inizio, lo importiamo in questo modo:
+
+const {v4:uuidv4} = require('uuid')
+
+
+Ci sono più versioni, noi usiamo la v4, e con i due punti la rinominiamo in uuidv4, basta chiamarla poi come funzione e genererà l'uuid.
+
+Dopo per aggiungerlo al nostro array usa questa dotazione, 
+
+items = [...items, item]
+
+Che sinceramente devo cercare, sostanzialmente dovrebbe essere che dice che in array items c'è items e in append l'item appena creato.
+
+Prima di proseguire a questa ricerca, per la risposta fa semplicemente:
+
+reply.code(201).send(item);
+
+quindi la solita risposta che abbiamo dato fino ad ora, se vogliamo dare un codice specifico facciamo .code, prima di .send, e lui manderà quel codice.
+
+Ok, ho giusto provato l'applicazione del metodo post, per mandare i dati come body nel req.http per i test usiamo questo:
+
+POST http://localhost:5000/additems HTTP/1.1
+Content-Type: application/json
+
+{
+    "name" : "Nuovo oggetto",
+    "price": "300"
+}
+
+
+Ovviamente cambiamo da GET a POST, però poi dobbiamo dire il content type, ovvero cosa gli passiamo come risposta alla richiesta
+
+e poi l'oggetto json vero e proprio.
+
+Per il resto il discorso funziona, ho solo dovuto cambiare una cosa nella dichiarazione della rotta perchè avevo scordato gli apici, e poi cambiare l'import di items, perchè dentro al file si dichiarava come let l'array, e nel controller lo andavo a importare come const, quindi non potevo appendere.
+
+##

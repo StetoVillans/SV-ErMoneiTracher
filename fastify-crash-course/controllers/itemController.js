@@ -1,4 +1,5 @@
-const items = require('../Items');
+const {v4:uuidv4} = require('uuid')
+let items = require('../Items');
 
 const getItems = (req, reply) => {
     reply.send(items)
@@ -13,12 +14,22 @@ const getItem = (req, reply) => {
 }
 
 const addItem = (req, reply) => {
-    const itemOBJ = req.params
+    const {name} = req.body
+    const {price} = req.body
 
-    
+    const item = {
+        id: uuidv4(),
+        name,
+        price
+    }    
+
+    items = [...items, item]
+
+    reply.code(201).send(item);
 }
 
 module.exports = {
     getItems, 
     getItem,
+    addItem
 }
