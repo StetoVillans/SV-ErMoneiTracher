@@ -2851,4 +2851,5 @@ e poi l'oggetto json vero e proprio.
 
 Per il resto il discorso funziona, ho solo dovuto cambiare una cosa nella dichiarazione della rotta perchè avevo scordato gli apici, e poi cambiare l'import di items, perchè dentro al file si dichiarava come let l'array, e nel controller lo andavo a importare come const, quindi non potevo appendere.
 
+Sono arrivato a 29:00
 ##
