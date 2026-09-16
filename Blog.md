@@ -2740,5 +2740,62 @@ tags: [
 a:
 
 ```
+tags: [
+      { name: 'item', description: 'End-point per gli item' }
+    ],
+```
+
+# 16-09-2026
+
+Continuiamo da dove ero rimasto, quindi video di fastify minuto: 24 
+
+Siamo riusciti a far andare fastify swagger senza problems
+
+Tra l'altro l'ho anche provato e swagger permette anche di testare le api che sono fornite. Anche quelle che richiedono una query.
+
+Adesso andiamo ad aggiungere un api per l'aggiunta di un Item. Voglio provare prima da solo.
+
+Prima di tutto andiamo ad aggiungere a ItemsRoutes.js la rotta dichiarandola come post, visto che andremo a scrivere dei dati.
+
+Prima scrivo questo in route per definire la rotta:
 
 ```
+fastify.post(/additems/, postItemRoutesOptions)
+```
+
+Poi ho aggiunto le option con lo schema:
+
+const postItemRoutesOptions = {
+    schema: {
+        response: {
+            200: Item
+        },
+        tags: ['item'],
+    },
+    handler: postItem,
+}
+
+Direi che basta questo perchè a me interessa sapere 200 e l'item che ha aggiunto.
+
+Ho aggiunto anche in alto nel required il controller della rotta.
+
+const {getItem, getItems, postItem} = require('../controllers/itemController')
+
+
+Sono andato poi a crearlo nel file dei controller direi
+
+Però, come li passo i dati dell'oggetto che sto passadno in post, tipo così?
+
+const postItem = (req, reply) => {
+    const itemOBJ = req.params
+
+    
+}
+
+Però con questo ho 2 problemi, punto numero 1, non so se itemOBJ verrà riempito con l'oggetto ipotetico mandato in post, non so la richiesta come verrà inviata in questo tipo di esempio, e non so soprattutto come append nel file items.js per aggiungere effettivamente l'item dopo la richiesta, adesso vediamo cosa mi dice il tutorial e vediamo dove salto fuori.
+
+Ok finchè crea la rotta è uguale
+
+Anche per le options dell'item, però cambia la risposta con 201, che effettivamente è giusto
+
+Allora noi avremo bisogno del name e del price dalla richiesta, la richiesta post scrive nel body, quindi per ricavarlo in addItem

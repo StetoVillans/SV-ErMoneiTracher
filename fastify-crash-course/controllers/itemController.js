@@ -12,6 +12,12 @@ const getItem = (req, reply) => {
     reply.send(replyItem)
 }
 
+const addItem = (req, reply) => {
+    const itemOBJ = req.params
+
+    
+}
+
 module.exports = {
     getItems, 
     getItem,
