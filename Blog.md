@@ -3285,3 +3285,5 @@ Connection: close
   "message": "body must have required property 'name'"
 }
 ```
+
+Però per me non ha senso renderlo obbligatorio, quindi lo toglierò.

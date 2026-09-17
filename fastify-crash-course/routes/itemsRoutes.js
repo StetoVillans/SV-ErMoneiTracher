@@ -67,13 +67,13 @@ const deleteItemRouteOptions = {
 
 const updateItemRouteOptions = {
     schema: {
-        body: {
+/*         body: {
             type: 'object',
             required: ['name'],
             properties: {
                 name: {type: 'string'}
             },
-        },
+        }, */
         response: {
             200: {
                 type: 'string', 
