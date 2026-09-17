@@ -55,7 +55,10 @@ const postItemRoutesOptions = {
 const deleteItemRouteOptions = {
     schema: {
         response: {
-            202: Item
+            200: {
+                type: 'string', 
+                description: "Item deleted"
+            }
         },
         tags: ['item'],
     },

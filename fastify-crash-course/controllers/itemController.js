@@ -33,9 +33,13 @@ const deleteItem = (req, reply) => {
     const id = req.params
 
     //items = [...items, item]
-    items.pop(id)
+    //items.pop(id)
+    //itemstemp = items.indexOf(id)
+    //items.splice(itemstemp, 1)
 
-    reply.code(202).send(items);
+    items = items.filter(item => item.id !== id)
+
+    reply.code(200).send("Item deleted");
 }
 
 module.exports = {

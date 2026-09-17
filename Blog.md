@@ -3114,3 +3114,18 @@ Connection: close
 object is not a function, sicuramente è per come sto cercando di popparlo fuori, se provo direttamente con l'id al posto di fare anche il find?
 
 Allora, togliendo il find funziona, ma non proprio, infatti mi ricordavo che il pop funzionasse in modo un pò diverso. il pop direi che rimuove l'ultimo elemento dall'array, infatti a prescindere dall'id che passiamo finisce che toglie l'oggetto finale, qualunque esso sia.
+
+Provo a cercare un'altro metodo.
+
+Ho provato anche questa strada:
+
+```js
+itemstemp = items.indexOf(id)
+items.splice(itemstemp, 1)
+```
+
+Ovvero salvo in una variabile temporanea l'index dell'oggetto da eliminare e poi faccio splice, ma mi toglie sempre l'ulitmo, vado sul tutorial a vedere cosa fa lui.
+
+Intanto fa una risposta diversa ma sticazzi di quello per ora.
+
+Ho copiato cosa fa lui, effettivamente non da errori però non mi rimuove effettivamente l'item
