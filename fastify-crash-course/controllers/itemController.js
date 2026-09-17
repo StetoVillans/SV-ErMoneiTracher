@@ -43,9 +43,27 @@ const deleteItem = (req, reply) => {
     reply.code(200).send("Item deleted");
 }
 
+const updateItem = (req, reply) => {
+    const { id } = req.params
+    const { name } = req.body
+
+
+    //const tempItems = items.find(item => item.id == id)
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].id == id) {
+            items[i].name = name
+        }
+    }
+    console.log(items)
+
+    reply.code(200).send("Item updated");
+}
+
 module.exports = {
     getItems, 
     getItem,
     addItem,
-    deleteItem
+    deleteItem,
+    updateItem
 }

@@ -3171,9 +3171,98 @@ Nel secondo caso `const { id } = req.params` id assumerà solo = 2 come valore, 
 
 Ok, di base il nome deve anche essere lo stesso, se vogliamo usarne uno diverso la sintassi è la seguente:
 
-{ id: userID }
+`{ id: userID }`
 
-E potremo usare userID.
+E potremo usare `userID`.
 
 Come per quando abbiamo importato uuid v4.
 
+## UPDATE, quindi .put
+
+Allora, ho solo sentito che vuole updatare, proviamo anche qui ad andare in freestyle.
+
+Ho aggiunto la rotta, l'option in questo modo:
+
+```js
+fastify.put(/items/:id, updateItemRouteOptions)
+
+// E
+
+const updateItemRouteOptions = {
+    schema: {
+        response: {
+            200: {
+                type: 'string', 
+                description: "Item updated"
+            }
+        },
+        tags: ['item'],
+    },
+    handler: updateItem,
+}
+```
+
+Poi in controller ho fatto csoì, ma non sono sicuro, anche perchè da errore:
+
+```JS
+const updateItem = (req, reply) => {
+    const { id } = req.params
+    const { name } = req.body
+
+
+    const items = items.find(item => item.id == id)
+    items.name = name
+
+    console.log(items)
+
+    reply.code(200).send("Item updated");
+}
+```
+
+Che allora, dopo aver tolto il const visto che andavo a riinizializzare una variabile con una costante e dava errore.
+
+Dopo funzionava, ma modificava tutto il json lasciando un solo item, quello modificato.
+
+Adesso invece ho fatto così e funziona:
+
+```js
+const updateItem = (req, reply) => {
+    const { id } = req.params
+    const { name } = req.body
+
+
+    const tempItems = items.find(item => item.id == id)
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].id == tempItems.id) {
+            items[i].name = name
+        }
+    }
+    console.log(items)
+
+    reply.code(200).send("Item updated");
+}
+```
+
+C'è sicuramente un metodo con il quale si fa molto più veloce usando una funzione? Si, però ho voluto risolverlo con la mia testa senza sgooglare.
+
+Adesso ho anche già notato di un controllo di troppo, il tempItems dovrebbe essere inutile, se io faccio così:
+
+
+const updateItem = (req, reply) => {
+    const { id } = req.params
+    const { name } = req.body
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].id == id) {
+            items[i].name = name
+        }
+    }
+    console.log(items)
+
+    reply.code(200).send("Item updated");
+}
+
+Dovrebbe essere uguale
+
+Infatti esattamente, che king
