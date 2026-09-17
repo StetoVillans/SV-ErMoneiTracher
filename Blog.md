@@ -3022,3 +3022,95 @@ Ma non uno con name:
 
 Esattamente, in realtà poi ci da errore perchè dice che il json non è definito correttamente, perchè senza le virgolette effetivamente si rompe la definizione di json
 
+## DELETE
+
+Allora intanto provo da solo:
+
+Sicuramente creo rotta easy e le option le copio da post e rimuovo l'obbligo di inserire il campo name nel body.
+
+Poi creo nel controller il metodo per la rimozione.
+
+Adesso per togliere l'elemento voglio provare una cosa del genere:
+
+```js
+const deleteItem = (req, reply) => {
+    const {id} = req.params
+
+    //items = [...items, item]
+    items.pop(items.find(id))
+
+    reply.code(202).send(item);
+}
+```
+
+Nel senso che fa il .pop, quindi in teoria lo toglie dall'array (non ho ricercato se il metodo faceva quello, sto andando a memoria), però non posso dire per id ma fare il items.find, perchè find mi dovrebbe ritornare l'oggetto vero e proprio, quindi se faccio pop dell'oggetto dovrebbe proprio toglierlo dall'array.
+
+Ho provato a salvare ma mi crasha ancora prima di partire con questo errore:
+```bash
+C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\fastify\lib\route.js:372
+          throw error
+          ^
+
+AssertionError [ERR_ASSERTION]: The first character of a path should be `/` or `*`
+    at Router.on (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\find-my-way\index.js:115:3)
+    at Object.addNewRoute (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\fastify\lib\route.js:361:16)
+    at Object.route (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\fastify\lib\route.js:269:19)
+    at Object.prepareRoute (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\fastify\lib\route.js:168:18)
+    at Object._delete [as delete] (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\fastify\fastify.js:182:34)
+    at itemRoutes (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\routes\itemsRoutes.js:73:19)
+    at Plugin.exec (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\avvio\lib\plugin.js:125:28)
+    at Boot._loadPlugin (C:\Users\steph\Documents\SV-ErMoneiTracher\fastify-crash-course\node_modules\avvio\index.js:446:10)
+    at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0
+```
+
+Che non sto capendo, first character of path, ma che path.
+
+Ah so un cojone
+
+Avevo la rotta delete scritta così:
+
+```js
+fastify.delete('items/:id', deleteItemRouteOptions)
+```
+
+Invece che così:
+
+```js
+fastify.delete('/items/:id', deleteItemRouteOptions)
+```
+
+Ok up and running, mo lo testo, per la richiesta ho fatto semplciemente:
+
+```http
+### DELETE ONE ITEMS
+DELETE http://localhost:5000/items/1 HTTP/1.1
+```
+
+mhh ricevo questo errore:
+
+```bash
+HTTP/1.1 500 Internal Server Error
+content-type: application/json; charset=utf-8
+content-length: 87
+Date: Thu, 17 Sep 2026 06:43:40 GMT
+Connection: close
+
+{
+  "statusCode": 500,
+  "error": "Internal Server Error",
+  "message": "object is not a function"
+}
+```
+
+object is not a function, sicuramente è per come sto cercando di popparlo fuori, se provo direttamente con l'id al posto di fare anche il find?
+
+Allora, togliendo il find funziona, ma non proprio, infatti mi ricordavo che il pop funzionasse in modo un pò diverso. il pop direi che rimuove l'ultimo elemento dall'array, infatti a prescindere dall'id che passiamo finisce che toglie l'oggetto finale, qualunque esso sia.

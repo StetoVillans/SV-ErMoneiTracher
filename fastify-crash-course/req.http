@@ -9,6 +9,9 @@ POST http://localhost:5000/additems HTTP/1.1
 Content-Type: application/json
 
 {
-    "name" : Stronzo,
+    "name" : "Stronzo",
     "price": "300"
 }
+
+### DELETE ONE ITEMS
+DELETE http://localhost:5000/items/1 HTTP/1.1

@@ -29,8 +29,18 @@ const addItem = (req, reply) => {
     reply.code(201).send(item);
 }
 
+const deleteItem = (req, reply) => {
+    const id = req.params
+
+    //items = [...items, item]
+    items.pop(id)
+
+    reply.code(202).send(items);
+}
+
 module.exports = {
     getItems, 
     getItem,
-    addItem
+    addItem,
+    deleteItem
 }
