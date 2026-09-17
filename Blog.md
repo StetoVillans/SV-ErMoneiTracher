@@ -3129,3 +3129,51 @@ Ovvero salvo in una variabile temporanea l'index dell'oggetto da eliminare e poi
 Intanto fa una risposta diversa ma sticazzi di quello per ora.
 
 Ho copiato cosa fa lui, effettivamente non da errori però non mi rimuove effettivamente l'item
+
+Allora ora come ora ci sono ancora problemi, ovvero quando faccio per eliminare un item, mi dice che lo fa con successo, però quando poi faccio get all item lo vedo ancora completo.
+
+Visto che lui lo usava ma io non so cosa faccia, cosa fa il metodo filter?
+
+## .Filter() sugli array
+
+Allora, fa lo stesso di cui parlavamo per lo spread, quindi:
+
+- crea un nuovo array senza toccare l'originale
+- Inserisce dentro l'array nuovo solo gli elementi che passano il filtro.
+
+In questo caso il nostro filtro è:
+
+```js
+item => item.id !== id
+```
+
+Quindi dovrebbe creare un array con tutti gli elementi che hanno ID DIVERSO a quello che abbiamo chiesto di eliminare, quindi di conseguenza rimuovendo quello richiesto dall'array.
+
+Dopo un pò di prove ho trovato il problema, era che l'id che importavo lo importavo così:
+
+```js
+const id = req.params
+
+//invece di COSì
+
+const { id } = req.params
+```
+
+La differenza? in teoria che lo sto prendendo come oggetto (?) Verifico per non dire cazzate ma non mi sembra.
+
+Cazzata.
+
+Si chiama destrutturazione.
+
+Nel primo caso `const id = req.params` id assumerà questo valore = { id = 2}
+
+Nel secondo caso `const { id } = req.params` id assumerà solo = 2 come valore, ed è quello che vogliamo.
+
+Ok, di base il nome deve anche essere lo stesso, se vogliamo usarne uno diverso la sintassi è la seguente:
+
+{ id: userID }
+
+E potremo usare userID.
+
+Come per quando abbiamo importato uuid v4.
+

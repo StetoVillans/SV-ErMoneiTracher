@@ -30,7 +30,7 @@ const addItem = (req, reply) => {
 }
 
 const deleteItem = (req, reply) => {
-    const id = req.params
+    const { id } = req.params
 
     //items = [...items, item]
     //items.pop(id)
@@ -38,6 +38,7 @@ const deleteItem = (req, reply) => {
     //items.splice(itemstemp, 1)
 
     items = items.filter(item => item.id !== id)
+    console.log(items)
 
     reply.code(200).send("Item deleted");
 }
