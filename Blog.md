@@ -2976,6 +2976,7 @@ Quindi se ho solo bisogno di uuid e non devono essere riproducibili, V1 o V4, v1
 V3 e V5 invece sono ripetibili, in caso vadano calcolati in base a nomi. La V3 è un pò limitata perchè usa MD5, se non si è su hardware molto lento, usare V5
 
 ## CONTINUO CON IL TUTORIAL DA 29:00
+## Aggiunta di REQUIRED per dei campi della richiesta post
 
 L'ultima cosa abbiamo fatto la .post, probabilmente ora faremo la put, o la delete.
 
