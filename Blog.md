@@ -3287,3 +3287,10 @@ Connection: close
 ```
 
 Però per me non ha senso renderlo obbligatorio, quindi lo toglierò.
+
+Ho guardato ora il tutorial, lui ovviamente lo fa molto più fancy, ma visto che del metodo map e di tutta la sintassi ristretta non ci capisco un cazzo, il mio worka just aswell.
+
+La richiesta e quello che fa, anche spiegato a voce, è identico, quindi ho ragione io.
+
+DAMN tutorial finito
+C'aggià fa' mo?
