@@ -23,7 +23,8 @@ const addItem = (req, reply) => {
         price
     }    
 
-    items = [...items, item]
+    //items = [...items, item]
+    items.push(item)
 
     reply.code(201).send(item);
 }

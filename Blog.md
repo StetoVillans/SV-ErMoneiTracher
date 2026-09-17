@@ -2874,9 +2874,81 @@ Oggi voglio concentrarmi su un paio di cose che ho lasciato indietro ieri per fi
 ## UNDERSTANDING DELLA NOTAZIONE DI APPEND ALL'ARRAY
 ## items = [...items, item]
 
+Allora, non ho ancora trovato questa notazione, però ho trovato che sugli array si può usare il metodo .push, che pusha un oggetto o qualunque cosa sia nel prossimo slot array libero dopo l'ultimo oggetto.
+
+Quindi intanto voglio provare quello e vedere se effettivamente è la stessa cosa.
+
+Modifico il controller di addItem così:
+
+```js
+const addItem = (req, reply) => {
+    const {name} = req.body
+    const {price} = req.body
+
+    const item = {
+        id: uuidv4(),
+        name,
+        price
+    }    
+
+    //items = [...items, item]
+    items.push(item)
+
+    reply.code(201).send(item);
+}
+```
+
+E ora lo testo.
+
+
+Perfetto funziona esattamente uguale, almeno nel mio esempio, adesso verifico che effettivamente sia la stessa cosa.
+
+Ok trovato, allora in teoria non sono proprio la stessa identica cosa.
+
+Nel caso di:
+
+```js
+items = [...items, item]
+```
+
+Usa il cosìdetto SPREADOPERATOR, che sarebbero `...`, questo operatore cosa fa:
+
+Prende tutti gli elementi all'interno di un array, che viene scritto subito dopo, nel nostro caso `...items`, e li spacchetta in un nuovo array indipendente.
+
+Quindi quando andiamo a fare:
+
+```js
+items = [...items, item]
+```
+
+Sostanzialmente andiamo a definire un nuovo array items, che avrà definiti come elementi, tutti gli elementi di items, e il nuovo item, quello che fa è quindi come scrivere:
+
+```js
+items = [array.item[1], array.item[2], array.item[3], item]
+```
+Ok ho anche cercato ora
+
+## COSA CAMBIA NELL'EFFETTIVO DA .PUSH?
+
+Sostanzialmente un pò di cose, il metodo .push non cambia il riferimento dell'array in memoria, ma aggiunge un elemento ad un array già esistente, quindi il riferimento in memoria non cambia.
+
+E qui sta l'inghippo, ovvero dove i framework come React, che per vedere i cambiamenti devono vedere gli elementi cambiare, si potrebbero perdere il cambio nell'array e non aggiornare l'elemento.
+
+Oltre a questo mantenere immutati l'array originale in alcuni casi ci permette di salvarne  lo stato, come con l'utilizzo di framework specifici.
+
+Fonte: https://www.reddit.com/r/learnprogramming/comments/14gza8p/did_the_spread_operator_replaced_the_push_method/ 
+
+```text
+Pushing modifies the original array, while you can use spreading to create a new array with an extra element.
+
+So it depends whether you want to modify (mutate) the original array or not. In some cases creating new arrays each time you add an element can cause performance issues. But in other situations - like when using features of certain frameworks - it's important not to directly modify the original array.
+
+There are other situations where either will work, and it's more a matter of style or preference.
+```
 
 ## LOOK INTO UUID PLUGIN - DIFFRENZA TRA VERSIONI ETC
 
+Documentazione UUID: https://www.npmjs.com/package/uuid
 
 
 
