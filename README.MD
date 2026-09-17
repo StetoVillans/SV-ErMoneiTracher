@@ -95,13 +95,17 @@ VS Marketplace Link: https://marketplace.visualstudio.com/items?itemName=humao.r
 
 Una volta installato provare a fare:
 
+```bash
 node --version
+```
 
 Quindi, se tutto ok, fare poi:
 
+```bash
 npm init -y
 
 npm i fastify @fastify/swagger @fastify/swagger-ui uuid
+```
 
 Per scaricare i pacchetti di esecuzione di fastify (backend).
 
@@ -115,16 +119,19 @@ Ci potrebbero essere due intoppi:
 
 Poi per il development
 
+```bash
 npm i -D nodemon
+```
 
 Poi modifichiamo gli script in package.json così:
 
+```json
 "main": "server.js",
   "scripts": {
     "start": "node server",
     "dev": "nodemon server"
   },
-
+```
 
 ### Init.sql
 

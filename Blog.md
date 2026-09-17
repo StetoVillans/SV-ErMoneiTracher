@@ -2767,6 +2767,7 @@ fastify.post(/additems/, postItemRoutesOptions)
 
 Poi ho aggiunto le option con lo schema:
 
+```
 const postItemRoutesOptions = {
     schema: {
         response: {
@@ -2776,23 +2777,27 @@ const postItemRoutesOptions = {
     },
     handler: postItem,
 }
+```
 
 Direi che basta questo perchè a me interessa sapere 200 e l'item che ha aggiunto.
 
 Ho aggiunto anche in alto nel required il controller della rotta.
 
+```
 const {getItem, getItems, postItem} = require('../controllers/itemController')
-
+```
 
 Sono andato poi a crearlo nel file dei controller direi
 
 Però, come li passo i dati dell'oggetto che sto passadno in post, tipo così?
 
+```
 const postItem = (req, reply) => {
     const itemOBJ = req.params
 
     
 }
+```
 
 Però con questo ho 2 problemi, punto numero 1, non so se itemOBJ verrà riempito con l'oggetto ipotetico mandato in post, non so la richiesta come verrà inviata in questo tipo di esempio, e non so soprattutto come append nel file items.js per aggiungere effettivamente l'item dopo la richiesta, adesso vediamo cosa mi dice il tutorial e vediamo dove salto fuori.
 
@@ -2804,6 +2809,7 @@ Allora noi avremo bisogno del name e del price dalla richiesta, la richiesta pos
 
 Quindi la costruzione dell'item in post è la seguente
 
+```
 const addItem = (req, reply) => {
     const {name} = req.body
     const {price} = req.body
@@ -2814,28 +2820,35 @@ const addItem = (req, reply) => {
         price
     }    
 }
+```
 
 Dove prendiamo name e price dal body della richiesta, e li mettiamo dentro all'item senza troppe strane cose, l'uuid è quel plugin che abbiamo instalalto all'inizio, lo importiamo in questo modo:
 
+```
 const {v4:uuidv4} = require('uuid')
-
+```
 
 Ci sono più versioni, noi usiamo la v4, e con i due punti la rinominiamo in uuidv4, basta chiamarla poi come funzione e genererà l'uuid.
 
 Dopo per aggiungerlo al nostro array usa questa dotazione, 
 
+```
 items = [...items, item]
+```
 
 Che sinceramente devo cercare, sostanzialmente dovrebbe essere che dice che in array items c'è items e in append l'item appena creato.
 
 Prima di proseguire a questa ricerca, per la risposta fa semplicemente:
 
+```
 reply.code(201).send(item);
+```
 
 quindi la solita risposta che abbiamo dato fino ad ora, se vogliamo dare un codice specifico facciamo .code, prima di .send, e lui manderà quel codice.
 
 Ok, ho giusto provato l'applicazione del metodo post, per mandare i dati come body nel req.http per i test usiamo questo:
 
+```
 POST http://localhost:5000/additems HTTP/1.1
 Content-Type: application/json
 
@@ -2843,6 +2856,7 @@ Content-Type: application/json
     "name" : "Nuovo oggetto",
     "price": "300"
 }
+```
 
 
 Ovviamente cambiamo da GET a POST, però poi dobbiamo dire il content type, ovvero cosa gli passiamo come risposta alla richiesta
@@ -2852,4 +2866,17 @@ e poi l'oggetto json vero e proprio.
 Per il resto il discorso funziona, ho solo dovuto cambiare una cosa nella dichiarazione della rotta perchè avevo scordato gli apici, e poi cambiare l'import di items, perchè dentro al file si dichiarava come let l'array, e nel controller lo andavo a importare come const, quindi non potevo appendere.
 
 Sono arrivato a 29:00
-##
+
+# 17-09-2026
+
+Oggi voglio concentrarmi su un paio di cose che ho lasciato indietro ieri per finire l'aggiunta della richiesta post = addItem
+
+## UNDERSTANDING DELLA NOTAZIONE DI APPEND ALL'ARRAY
+## items = [...items, item]
+
+
+## LOOK INTO UUID PLUGIN - DIFFRENZA TRA VERSIONI ETC
+
+
+
+
