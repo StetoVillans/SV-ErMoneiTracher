@@ -2975,4 +2975,49 @@ Quindi se ho solo bisogno di uuid e non devono essere riproducibili, V1 o V4, v1
 
 V3 e V5 invece sono ripetibili, in caso vadano calcolati in base a nomi. La V3 è un pò limitata perchè usa MD5, se non si è su hardware molto lento, usare V5
 
+## CONTINUO CON IL TUTORIAL DA 29:00
+
+L'ultima cosa abbiamo fatto la .post, probabilmente ora faremo la put, o la delete.
+
+Ci ricorda che ora come ora non li stiamo salvando persistenti ma ok quello lo sapevo.
+
+Nella definizione delle option possiamo, oltre a response nello schema dei valori obbligatori.
+
+Per fare questo possiamo scriverlo così: 
+
+```js
+const postItemRoutesOptions = {
+    schema: {
+        body: {
+            type: 'object',
+            required: ['name'],
+            properties: {
+                name: {type: 'string'}
+            },
+        },
+        response: {
+            201: Item
+        },
+        tags: ['item'],
+    },
+    handler: addItem,
+}
+```
+
+Quindi andiamo ad aggiungere nello schema, ovvero quello che la rotta si deve aspettare, ovvero una risposta di:
+- Tipo oggetto
+- della quale è necessiario inserire la proprietà name
+- e quella proprietà, all'interno dell'oggetto di risposta, deve essere di tipo stringa.
+
+Quindi se ora faccio una prova nell'addItem, dovrei poter aggiungere un oggetto con name:
+- 'Stronzo'
+
+Ma non uno con name: 
+- Stronzo
+
+![Virgolette Si](./MediaDocs/image6.png)
+
+![Virgolette NO](./MediaDocs/image7.png)
+
+Esattamente, in realtà poi ci da errore perchè dice che il json non è definito correttamente, perchè senza le virgolette effetivamente si rompe la definizione di json
 
