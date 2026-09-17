@@ -3266,3 +3266,22 @@ const updateItem = (req, reply) => {
 Dovrebbe essere uguale
 
 Infatti esattamente, che king
+
+Sicuramente poi posso fare come nel post, ovvero che uno dei valori in modifica sia obbligatorio.
+
+Infatti ho fatto copia e incolla ed è esattamente uguale e l'errore è lo stesso:
+
+```bash
+HTTP/1.1 400 Bad Request
+content-type: application/json; charset=utf-8
+content-length: 120
+Date: Thu, 17 Sep 2026 18:03:04 GMT
+Connection: close
+
+{
+  "statusCode": 400,
+  "code": "FST_ERR_VALIDATION",
+  "error": "Bad Request",
+  "message": "body must have required property 'name'"
+}
+```
